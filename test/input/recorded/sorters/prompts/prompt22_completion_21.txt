@@ -1,0 +1,19 @@
+  Option 1: The PLACEHOLDER can be replaced with:
+```
+this.right.insert
+```
+This would result in different behavior because it would insert the element into the right subtree instead of the left subtree, which could lead to a different sorting order.
+
+Option 2: The PLACEHOLDER can be replaced with:
+```
+this.left.insert(v, (e1, e2) => e2 - e1)
+```
+This would result in different behavior because it would use a different comparison function, which could lead to a different sorting order.
+
+Option 3: The PLACEHOLDER can be replaced with:
+```
+this.left.insert(v, compareFun)
+```
+This would result in different behavior because it would use the same comparison function as the original code, but it would insert the element into the left subtree instead of the right subtree, which could lead to a different sorting order.
+
+DONE.

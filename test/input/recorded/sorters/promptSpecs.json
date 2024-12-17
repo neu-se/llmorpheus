@@ -1,0 +1,599 @@
+[
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "callee",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 9,
+      "startColumn": 4,
+      "endLine": 9,
+      "endColumn": 15
+    },
+    "orig": "console.log"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "arg0",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 9,
+      "startColumn": 16,
+      "endLine": 9,
+      "endColumn": 45
+    },
+    "orig": "'*** creating TreeSorter ***'"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "if",
+    "component": "test",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 17,
+      "startColumn": 8,
+      "endLine": 17,
+      "endColumn": 23
+    },
+    "orig": "list.length > 1"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "for",
+    "component": "init",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 20,
+      "startColumn": 11,
+      "endLine": 20,
+      "endColumn": 28
+    },
+    "orig": "let i: number = 1",
+    "parentLocation": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 20,
+      "startColumn": 6,
+      "endLine": 22,
+      "endColumn": 7
+    }
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "for",
+    "component": "test",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 20,
+      "startColumn": 30,
+      "endLine": 20,
+      "endColumn": 45
+    },
+    "orig": "i < list.length",
+    "parentLocation": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 20,
+      "startColumn": 6,
+      "endLine": 22,
+      "endColumn": 7
+    }
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "for",
+    "component": "update",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 20,
+      "startColumn": 47,
+      "endLine": 20,
+      "endColumn": 50
+    },
+    "orig": "i++",
+    "parentLocation": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 20,
+      "startColumn": 6,
+      "endLine": 22,
+      "endColumn": 7
+    }
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "for",
+    "component": "header",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 20,
+      "startColumn": 11,
+      "endLine": 20,
+      "endColumn": 50
+    },
+    "orig": "let i: number = 1; i < list.length; i++",
+    "parentLocation": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 20,
+      "startColumn": 6,
+      "endLine": 22,
+      "endColumn": 7
+    }
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "callee",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 21,
+      "startColumn": 8,
+      "endLine": 21,
+      "endColumn": 19
+    },
+    "orig": "tree.insert"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "arg0",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 21,
+      "startColumn": 20,
+      "endLine": 21,
+      "endColumn": 27
+    },
+    "orig": "list[i]"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "arg1",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 21,
+      "startColumn": 29,
+      "endLine": 21,
+      "endColumn": 39
+    },
+    "orig": "compareFun"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "allArgs",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 21,
+      "startColumn": 20,
+      "endLine": 21,
+      "endColumn": 39
+    },
+    "orig": "list[i], compareFun",
+    "parentLocation": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 21,
+      "startColumn": 8,
+      "endLine": 21,
+      "endColumn": 40
+    }
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "callee",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 23,
+      "startColumn": 6,
+      "endLine": 23,
+      "endColumn": 19
+    },
+    "orig": "tree.copyInto"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "arg0",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 23,
+      "startColumn": 20,
+      "endLine": 23,
+      "endColumn": 24
+    },
+    "orig": "list"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "arg1",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 23,
+      "startColumn": 26,
+      "endLine": 23,
+      "endColumn": 27
+    },
+    "orig": "0"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "allArgs",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 23,
+      "startColumn": 20,
+      "endLine": 23,
+      "endColumn": 27
+    },
+    "orig": "list, 0",
+    "parentLocation": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 23,
+      "startColumn": 6,
+      "endLine": 23,
+      "endColumn": 28
+    }
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "if",
+    "component": "test",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 39,
+      "startColumn": 8,
+      "endLine": 39,
+      "endColumn": 37
+    },
+    "orig": "compareFun(v, this.value) < 0"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "callee",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 39,
+      "startColumn": 8,
+      "endLine": 39,
+      "endColumn": 18
+    },
+    "orig": "compareFun"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "arg0",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 39,
+      "startColumn": 19,
+      "endLine": 39,
+      "endColumn": 20
+    },
+    "orig": "v"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "arg1",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 39,
+      "startColumn": 22,
+      "endLine": 39,
+      "endColumn": 32
+    },
+    "orig": "this.value"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "allArgs",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 39,
+      "startColumn": 19,
+      "endLine": 39,
+      "endColumn": 32
+    },
+    "orig": "v, this.value",
+    "parentLocation": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 39,
+      "startColumn": 8,
+      "endLine": 39,
+      "endColumn": 33
+    }
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "if",
+    "component": "test",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 40,
+      "startColumn": 10,
+      "endLine": 40,
+      "endColumn": 27
+    },
+    "orig": "this.left != null"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "callee",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 41,
+      "startColumn": 8,
+      "endLine": 41,
+      "endColumn": 24
+    },
+    "orig": "this.left.insert"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "arg0",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 41,
+      "startColumn": 25,
+      "endLine": 41,
+      "endColumn": 26
+    },
+    "orig": "v"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "arg1",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 41,
+      "startColumn": 28,
+      "endLine": 41,
+      "endColumn": 38
+    },
+    "orig": "compareFun"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "allArgs",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 41,
+      "startColumn": 25,
+      "endLine": 41,
+      "endColumn": 38
+    },
+    "orig": "v, compareFun",
+    "parentLocation": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 41,
+      "startColumn": 8,
+      "endLine": 41,
+      "endColumn": 39
+    }
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "if",
+    "component": "test",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 46,
+      "startColumn": 10,
+      "endLine": 46,
+      "endColumn": 28
+    },
+    "orig": "this.right != null"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "callee",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 47,
+      "startColumn": 8,
+      "endLine": 47,
+      "endColumn": 25
+    },
+    "orig": "this.right.insert"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "arg0",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 47,
+      "startColumn": 26,
+      "endLine": 47,
+      "endColumn": 27
+    },
+    "orig": "v"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "arg1",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 47,
+      "startColumn": 29,
+      "endLine": 47,
+      "endColumn": 39
+    },
+    "orig": "compareFun"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "allArgs",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 47,
+      "startColumn": 26,
+      "endLine": 47,
+      "endColumn": 39
+    },
+    "orig": "v, compareFun",
+    "parentLocation": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 47,
+      "startColumn": 8,
+      "endLine": 47,
+      "endColumn": 40
+    }
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "if",
+    "component": "test",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 59,
+      "startColumn": 8,
+      "endLine": 59,
+      "endColumn": 25
+    },
+    "orig": "this.left != null"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "callee",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 60,
+      "startColumn": 17,
+      "endLine": 60,
+      "endColumn": 35
+    },
+    "orig": "this.left.copyInto"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "arg0",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 60,
+      "startColumn": 36,
+      "endLine": 60,
+      "endColumn": 40
+    },
+    "orig": "list"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "arg1",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 60,
+      "startColumn": 42,
+      "endLine": 60,
+      "endColumn": 50
+    },
+    "orig": "newIndex"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "allArgs",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 60,
+      "startColumn": 36,
+      "endLine": 60,
+      "endColumn": 50
+    },
+    "orig": "list, newIndex",
+    "parentLocation": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 60,
+      "startColumn": 17,
+      "endLine": 60,
+      "endColumn": 51
+    }
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "if",
+    "component": "test",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 63,
+      "startColumn": 8,
+      "endLine": 63,
+      "endColumn": 26
+    },
+    "orig": "this.right != null"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "callee",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 64,
+      "startColumn": 17,
+      "endLine": 64,
+      "endColumn": 36
+    },
+    "orig": "this.right.copyInto"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "arg0",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 64,
+      "startColumn": 37,
+      "endLine": 64,
+      "endColumn": 41
+    },
+    "orig": "list"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "arg1",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 64,
+      "startColumn": 43,
+      "endLine": 64,
+      "endColumn": 51
+    },
+    "orig": "newIndex"
+  },
+  {
+    "file": "src/TreeSorter.ts",
+    "feature": "call",
+    "component": "allArgs",
+    "location": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 64,
+      "startColumn": 37,
+      "endLine": 64,
+      "endColumn": 51
+    },
+    "orig": "list, newIndex",
+    "parentLocation": {
+      "file": "/Users/franktip/sabbatical/sorters/Sorters/sorters/src/TreeSorter.ts",
+      "startLine": 64,
+      "startColumn": 17,
+      "endLine": 64,
+      "endColumn": 52
+    }
+  }
+]

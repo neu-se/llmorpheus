@@ -1,0 +1,9 @@
+[
+  {
+    "name": "plural",
+    "url": "https://github.com/swang/plural/tree/f0027d66ecb37ce0108c8bcb4a6a448d1bf64047",
+    "edits": "sed -i -e 's/\"mocha\": \"~2.0.0\"/\"mocha\": \"~7.2.0\"/' package.json",
+    "files": "./index.js"
+  }
+]
+

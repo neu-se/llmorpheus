@@ -1,0 +1,9 @@
+[
+  {
+    "name": "node-geo-point",
+    "url": "https://github.com/rainder/node-geo-point/tree/c839d477ff7a48d1fc6574495cbbc6196161f494",
+    "edits": "echo 'no edits'",
+    "files": "src/{geo-point,index}.ts"
+  }
+]
+

@@ -1,0 +1,15 @@
+  Option 1: The PLACEHOLDER can be replaced with:
+```
+tree.insert(list[i], compareFun);
+```
+This would result in different behavior because the `insert` method is called with the wrong arguments. The `insert` method expects two arguments, the element to insert and the comparison function, but in this case, the `list[i]` element is passed as the comparison function, which would cause the method to fail.
+
+Option 2: The PLACEHOLDER can be replaced with:
+```
+tree.insert(list[i], compareFun(list[i], list[i]));
+```
+This would result in different behavior because the `insert` method is called with the wrong arguments. The `insert` method expects two arguments, the element to insert and the comparison function, but in this case, the `compareFun(list[i], list[i])` expression is passed as the comparison function, which would cause the method to fail.
+
+Option 3: The PLACEHOLDER can be replaced with:
+```
+tree.insert(list[i], compareFun(list[i], list[i

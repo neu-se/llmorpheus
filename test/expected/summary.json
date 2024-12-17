@@ -1,0 +1,25 @@
+{
+  "nrPrompts": 0,
+  "nrCandidates": 0,
+  "nrSyntacticallyValid": 0,
+  "nrSyntacticallyInvalid": 0,
+  "nrIdentical": 0,
+  "nrDuplicate": 0,
+  "nrLocations": 0,
+  "totalPromptTokens": 0,
+  "totalCompletionTokens": 0,
+  "totalTokens": 0,
+  "metaInfo": {
+    "modelName": "codellama-34b-instruct",
+    "template": "./templates/template-full.hb",
+    "systemPrompt": "",
+    "maxTokens": 250,
+    "temperature": 0,
+    "maxNrPrompts": 100,
+    "nrAttempts": 1,
+    "mutate": "src/**/TreeSorter.js",
+    "ignore": "src/**/*.spec.ts",
+    "rateLimit": 1000,
+    "benchmark": false
+  }
+}

@@ -1,0 +1,17 @@
+  Option 1: The PLACEHOLDER can be replaced with:
+```
+this.right.insert(v, compareFun);
+```
+This would result in different behavior because it would cause the `insert` method to be called on the `right` property of the `Tree` object, which is not the same as the `left` property that was originally used. This could potentially cause the tree to be constructed in a different way, leading to different behavior in the `sort` method.
+
+Option 2: The PLACEHOLDER can be replaced with:
+```
+this.left.insert(v, compareFun);
+```
+This would result in different behavior because it would cause the `insert` method to be called on the `left` property of the `Tree` object, which is not the same as the `right` property that was originally used. This could potentially cause the tree to be constructed in a different way, leading to different behavior in the `sort` method.
+
+Option 3: The PLACEHOLDER can be replaced with:
+```
+this.value = v;
+```
+This would result in different behavior because it would cause

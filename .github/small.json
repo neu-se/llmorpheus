@@ -1,0 +1,27 @@
+[
+  {
+    "name": "node-jsonfile",
+    "url": "https://github.com/jprichardson/node-jsonfile/tree/9c6478a85899a9318547a6e9514b0403166d8c5c",
+    "edits": "sed -i -e 's/npm run lint && //' package.json",
+    "files": "./*.js"
+  },
+  {
+    "name": "zip-a-folder",
+    "url": "https://github.com/maugenst/zip-a-folder/tree/d2ea465b20dc33cf8c98c58a7acaf875c586c3e1",
+    "edits": "sed -i -e 's/ && npm run lint//' package.json",
+    "files": "lib/**.ts"
+  },
+  {
+    "name": "crawler-url-parser",
+    "url": "https://gitlab.com/autokent/crawler-url-parser/tree/202c5b25ad693d284804261e2b3815fe66e0723e",
+    "edits": "sed -i -e 's/\"mocha\": \"^4.0.1\"/\"mocha\": \"^7.2.0\"/' package.json",
+    "files": "./crawler-url-parser.js"
+  },
+  {
+    "name": "image-downloader",
+    "url": "https://gitlab.com/demsking/image-downloader/tree/19a53f652824bd0c612cc5bcd3a2eb173a16f938",
+    "edits": "echo 'no edits'",
+    "files": "./{index,lib/*}.js"
+  }
+]
+

@@ -1,0 +1,8 @@
+[
+  {
+    "name": "delta",
+    "url": "https://github.com/quilljs/delta/tree/5ffb853d645aa5b4c93e42aa52697e2824afc869",
+    "edits": "sed -i -e 's/types\\/node\": \"^17.0.21\"/types\\/node\": \"^18.9.0\"/' package.json",
+    "files": "./src/*.ts"
+  }
+]

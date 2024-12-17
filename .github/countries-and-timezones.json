@@ -1,0 +1,9 @@
+[
+  {
+    "name": "countries-and-timezones",
+    "url": "https://github.com/manuelmhtr/countries-and-timezones/tree/241dd0f56dfc527bcd87779ae14ed67bd25c1c0e",
+    "edits": "sed -i -e 's/ && yarn run test:types//;s/rollup -c && //' package.json; sed -i \"s/sed -i ''/sed -i/g\" .fixTypes.sh",
+    "files": "src/**.js"
+  }
+]
+

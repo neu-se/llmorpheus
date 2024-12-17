@@ -1,0 +1,8 @@
+[
+  {
+    "name": "q",
+    "url": "https://github.com/kriskowal/q/tree/6bc7f524eb104aca8bffde95f180b5210eb8dd4b",
+    "edits": "sed -i -e 's/ && npm run -s lint//' package.json",
+    "files":  "./{q,queue}.js" 
+  }
+]

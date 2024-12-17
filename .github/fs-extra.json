@@ -1,0 +1,9 @@
+[
+  {
+    "name": "fs-extra",
+    "url": "https://github.com/jprichardson/node-fs-extra/tree/6bffcd81881ae474d3d1765be7dd389b5edfd0e0",
+    "edits": "sed -i -e 's/\"mocha\": \"^5.0.5\"/\"mocha\": \"^7.2.0\"/' package.json; sed -i -e 's/npm run lint && npm run unit/npm run unit/' package.json",
+    "files":  "./lib/**/*.js",
+    "ignore": "**/__tests__"
+  }
+]

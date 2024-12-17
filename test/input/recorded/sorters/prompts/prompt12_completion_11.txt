@@ -1,0 +1,19 @@
+  Option 1: The PLACEHOLDER can be replaced with:
+```
+tree.copyInto(list, index + 1);
+```
+This would result in different behavior because the `index` parameter is incremented by 1, which would cause the `copyInto` method to start inserting elements at the wrong index.
+
+Option 2: The PLACEHOLDER can be replaced with:
+```
+tree.copyInto(list, index - 1);
+```
+This would result in different behavior because the `index` parameter is decremented by 1, which would cause the `copyInto` method to start inserting elements at the wrong index.
+
+Option 3: The PLACEHOLDER can be replaced with:
+```
+tree.copyInto(list, index + list.length);
+```
+This would result in different behavior because the `index` parameter is incremented by the length of the `list` array, which would cause the `copyInto` method to start inserting elements at the wrong index.
+
+DONE.

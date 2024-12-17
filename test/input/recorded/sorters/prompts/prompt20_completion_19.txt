@@ -1,0 +1,19 @@
+  Option 1: The PLACEHOLDER can be replaced with:
+```
+v, this.value + 1
+```
+This would result in different behavior because the `+ 1` would cause the comparison to always be greater than 0, resulting in the element being inserted into the right subtree instead of the left subtree.
+
+Option 2: The PLACEHOLDER can be replaced with:
+```
+v, this.value - 1
+```
+This would result in different behavior because the `- 1` would cause the comparison to always be less than 0, resulting in the element being inserted into the left subtree instead of the right subtree.
+
+Option 3: The PLACEHOLDER can be replaced with:
+```
+v, this.value * 2
+```
+This would result in different behavior because the `* 2` would cause the comparison to always be greater than 0, resulting in the element being inserted into the right subtree instead of the left subtree.
+
+DONE.

@@ -1,0 +1,12 @@
+dist
+node_modules
+.llm-cache
+test/temp_output
+experiments
+src/**/*.js
+src/**/*.js.map
+benchmark/*.js
+benchmark/*.js.map
+.DS_Store
+test/actual
+test-*

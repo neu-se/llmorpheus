@@ -1,0 +1,19 @@
+  Option 1: The PLACEHOLDER can be replaced with:
+```
+1
+```
+This would result in different behavior because the `copyInto` method would always return 1, regardless of the input list, which would cause the `sort` method to always return the same result, regardless of the input list.
+
+Option 2: The PLACEHOLDER can be replaced with:
+```
+-1
+```
+This would result in different behavior because the `copyInto` method would always return -1, regardless of the input list, which would cause the `sort` method to always return the opposite result, regardless of the input list.
+
+Option 3: The PLACEHOLDER can be replaced with:
+```
+list.length
+```
+This would result in different behavior because the `copyInto` method would always return the length of the input list, regardless of the input list, which would cause the `sort` method to always return the same result, regardless of the input list.
+
+DONE.

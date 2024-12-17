@@ -1,0 +1,223 @@
+name: Apply Stryker's Standard Mutation Operators
+
+on:
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: "JSON file that specifies packages to generate mutants for"
+        default: "benchmarks.json"
+      strykerOptions:
+        description: "stryker options (e.g., --concurrency 4) to pass to stryker"
+        default: ""
+      debug_enabled:
+        type: boolean
+        description: "Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)"
+        default: false
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      packages: "${{ steps.parse_packages.outputs.packages }}" 
+      strykerOptions: "${{ github.event.inputs.strykerOptions }}"
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - id: parse_packages
+        run: |
+          packages=$(node \
+                     .github/find_benchmarks.js " \
+                     .github/${{ github.event.inputs.packages || 'benchmarks.json' }}")
+          packages=$(echo $packages | tr '\n' ' ')
+          echo "packages=$packages" >> $GITHUB_OUTPUT
+  benchmark:
+    needs:
+      - setup
+    runs-on: ubuntu-latest
+
+    # steps:
+    #   - name : print needs
+    #     run: |
+    #       echo "packages=${{ fromJson(needs.setup.outputs.packages) }}"
+          
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJson(needs.setup.outputs.packages) }}
+    steps:
+      - name: checkout master branch of StrykerJS from https://github.com/neu-se/stryker-js into directory stryker-js
+        uses: actions/checkout@v3
+        with:
+          repository: neu-se/stryker-js
+          ref: master
+          path: stryker-js
+
+      - name: build StrykerJS
+        run: |
+          cd stryker-js
+          npm install
+          npm run build
+      - name: print package info
+        run: |
+          echo "package.host=${{ matrix.package.host }}" 
+          echo "package.name=${{ matrix.package.name }}"
+          echo "package.owner=${{ matrix.package.owner }}"
+          echo "package.repo=${{ matrix.package.repo }}"
+          echo "package.sha=${{ matrix.package.sha }}"
+          echo "package.edits=${{ matrix.package.edits }}"
+          echo "package.files=${{ matrix.package.files }}"
+          echo "package.ignore=${{ matrix.package.ignore }}"
+      - name: check out benchmark
+        if: ${{ matrix.package.host == 'github.com' }}
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ format('{0}/{1}', matrix.package.owner, matrix.package.repo) }}
+          ref: ${{ matrix.package.sha }}
+          path: ${{ matrix.package.name }}
+
+      - name: Checkout gitlab package repo
+        if: ${{ matrix.package.host == 'gitlab.com' }}
+        run: |
+          git clone ${{ format('https://gitlab.com/{0}/{1}', matrix.package.owner, matrix.package.repo) }} ${{ matrix.package.name }}
+          cd ${{ matrix.package.name }}
+          git checkout ${{ matrix.package.sha }}
+      - name: build project
+        run: |
+          cd ${{ matrix.package.name }}
+          # if an edit command for editing package.json is specified (e.g., to disable linting), run it
+          if [ -n "$MATRIX_PACKAGE_EDITS" ]; then
+            ${{ matrix.package.edits }}
+          fi
+          npm install
+          # if a build script exists, run it
+          npm run build || echo "No build script found"
+        env:
+          MATRIX_PACKAGE_EDITS: ${{ matrix.package.edits }}
+
+      - name: Check out llm-mutation-testing
+        uses: actions/checkout@v3
+        with:
+          path: llm-mutation-testing 
+
+      - name: Set up llm-mutation-testing
+        run: |
+          cd llm-mutation-testing
+          npm run build
+      - name: install stryker-js and run stryker (standard mutators)
+        run: |
+          cd ${{ matrix.package.name }}
+          npm install install-local # install-local is needed to install our custom version of stryker-js  
+          npx install-local ../stryker-js/packages/{core,util,api,instrumenter,*-runner}  --legacy-peer-deps
+          STRYKER_FILES=$(node ../llm-mutation-testing/.github/expandGlob.js $(pwd) "${{ matrix.package.files }}" "${{ matrix.package.ignore }}")
+          STRYKER_OPTIONS="${{ needs.setup.outputs.strykerOptions }}"
+          (time npx stryker run $STRYKER_OPTIONS --mutate $STRYKER_FILES)  2>&1 | tee -a StrykerOutput.txt
+      - name: extract summary from StrykerOutput.txt
+        run: |
+          cd ${{ matrix.package.name }}
+          node ../llm-mutation-testing/.github/parseStrykerReport.js StrykerOutput.txt    
+      - name: gather reports/mutation/mutation.html, StrykerOutput.txt, and StrykerInfo.json into results.zip
+        run: |
+          cd ${{ matrix.package.name }}
+          mkdir results
+          mkdir results/results-${{ matrix.package.name }}
+          cp reports/mutation/mutation.html results/results-${{ matrix.package.name }}/mutation.html
+          cp StrykerOutput.txt results/results-${{ matrix.package.name }}/StrykerOutput.txt
+          cp StrykerInfo.json results/results-${{ matrix.package.name }}/StrykerInfo.json
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: results-${{ matrix.package.name }}
+          path: ${{ matrix.package.name }}/results
+
+  combine_output:
+    name: Combine output from all benchmarks
+    needs:
+      - setup
+      - benchmark
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download output zips
+        uses: actions/download-artifact@v4.1.7
+
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
+      #   if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}     
+
+      - name: Combine outputs
+        run: |
+          mkdir results
+          mkdir results/results
+          cd results/results
+          # move all benchmark info into a single directory
+          for benchmark in ../../results-*
+          do
+             # extract benchmark name
+             name=$(echo $benchmark | sed 's/..\/..\/results-//')
+             mv $benchmark/results-$name $name
+          done
+          cd ../..
+      
+      - name: Upload combined output files
+        uses: actions/upload-artifact@v2
+        with:
+          name: results
+          path: results/results
+
+  generate_report:
+    name: Generate report
+    needs: 
+      - setup
+      - combine_output
+    runs-on: ubuntu-latest
+
+    steps:
+       - name: Download combined output files
+         uses: actions/download-artifact@v4.1.7
+         with:
+           name: results
+           path: results
+
+       - name: Check out llm-mutation-testing
+         uses: actions/checkout@v3
+         with:
+           path: llm-mutation-testing 
+   
+       - name: Setup tmate session
+         uses: mxschmitt/action-tmate@v3
+         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}     
+
+       - name: Generate report
+         run: |
+           cd llm-mutation-testing
+           npm run build
+           # if stryker options are specified, include them in the title
+           STRYKER_OPTIONS="${{ needs.setup.outputs.strykerOptions }}" 
+           if [ -n "$STRYKER_OPTIONS" ]; then
+             title="Report (StrykerJS standard mutators $STRYKER_OPTIONS)"
+           else
+             title="Report (StrykerJS standard mutators)"
+           fi
+           node .github/generateReport.js "$title" ../results > report.md
+           more report.md > $GITHUB_STEP_SUMMARY
+
+       - name: Upload report
+         uses: actions/upload-artifact@v2
+         with:
+           name: report.md
+           path: llm-mutation-testing/report.md
+
+       - name: generate Latex table
+         run: |
+           cd llm-mutation-testing
+           node .github/generateStrykerJSTable.js "$title" ../results > table.tex        
+  
+       - name: Upload table
+         uses: actions/upload-artifact@v2
+         with:
+           name: table.tex
+           path: llm-mutation-testing/table.tex

@@ -1,0 +1,9 @@
+[
+  {
+    "name": "pull-stream",
+    "url": "https://github.com/pull-stream/pull-stream/tree/29b4868bb3864c427c3988855c5d65ad5cb2cb1c",
+    "edits": "sed -i -e 's/npm run lint && //' package.json",
+    "files": "{index,pull,throughs/*,sources/*,sinks/*,util/*}.js"
+  }
+]
+

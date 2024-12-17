@@ -1,0 +1,19 @@
+  Option 1: The PLACEHOLDER can be replaced with:
+```
+list, newIndex + 1
+```
+This would result in different behavior because the `newIndex` variable is incremented before it is used to insert the value into the list, which would cause the value to be inserted at the wrong index.
+
+Option 2: The PLACEHOLDER can be replaced with:
+```
+list, newIndex - 1
+```
+This would result in different behavior because the `newIndex` variable is decremented before it is used to insert the value into the list, which would cause the value to be inserted at the wrong index.
+
+Option 3: The PLACEHOLDER can be replaced with:
+```
+list, newIndex * 2
+```
+This would result in different behavior because the `newIndex` variable is multiplied by 2 before it is used to insert the value into the list, which would cause the value to be inserted at the wrong index.
+
+DONE.

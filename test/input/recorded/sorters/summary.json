@@ -1,0 +1,25 @@
+{
+  "nrPrompts": 40,
+  "nrCandidates": 114,
+  "nrSyntacticallyValid": 85,
+  "nrSyntacticallyInvalid": 29,
+  "nrIdentical": 0,
+  "nrDuplicate": 0,
+  "nrLocations": 33,
+  "totalPromptTokens": 36905,
+  "totalCompletionTokens": 9098,
+  "totalTokens": 46003,
+  "metaInfo": {
+    "modelName": "codellama-34b-instruct",
+    "temperature": 0,
+    "maxTokens": 250,
+    "maxNrPrompts": 1250,
+    "rateLimit": 0,
+    "nrAttempts": 3,
+    "template": "templates/template-full.hb",
+    "systemPrompt": "SystemPrompt-MutationTestingExpert.txt",
+    "mutate": "src/**/TreeSorter.ts",
+    "ignore": "**/*.spec.ts",
+    "benchmark": false
+  }
+}

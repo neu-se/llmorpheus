@@ -1,0 +1,9 @@
+[
+  {
+    "name": "node-jsonfile",
+    "url": "https://github.com/jprichardson/node-jsonfile/tree/9c6478a85899a9318547a6e9514b0403166d8c5c",
+    "edits": "sed -i -e 's/npm run lint && //' package.json",
+    "files": "./*.js"
+  }
+]
+

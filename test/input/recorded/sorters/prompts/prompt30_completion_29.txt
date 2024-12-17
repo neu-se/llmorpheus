@@ -1,0 +1,17 @@
+  Option 1: The PLACEHOLDER can be replaced with:
+```
+v, compareFun(v, this.value)
+```
+This would result in different behavior because it would cause the `insert` method to insert the element into the tree based on the result of the `compareFun` function, rather than the original code which inserts the element based on the `compareFun` function and the current value of the tree.
+
+Option 2: The PLACEHOLDER can be replaced with:
+```
+v, compareFun(v, this.value) + 1
+```
+This would result in different behavior because it would cause the `insert` method to insert the element into the tree based on the result of the `compareFun` function plus 1, rather than the original code which inserts the element based on the `compareFun` function and the current value of the tree.
+
+Option 3: The PLACEHOLDER can be replaced with:
+```
+v, compareFun(v, this.value) * 2
+```
+This would result in different behavior because it would cause the `insert` method to insert the element into

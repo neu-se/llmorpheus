@@ -1,0 +1,9 @@
+[
+  "src/BubbleSorter.ts",
+  "src/HeapSorter.ts",
+  "src/ISorter.ts",
+  "src/MergeSorter.ts",
+  "src/QuickSorter.ts",
+  "src/TreeSorter.ts",
+  "src/index.ts"
+]

@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig-base.json",
+  "compilerOptions": {
+    "outDir": "../dist",
+    "declaration": true
+  },
+  "include": [
+    "../typings/*.d.ts",
+    "./**/*.ts",
+    "../benchmark/createMutants.ts",
+    "mutantGenerator.ts.save"
+  ]
+}

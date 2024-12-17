@@ -1,0 +1,42 @@
+[
+  {
+    "id": "1",
+    "rule": "<Expr> + <Expr> -> <Expr> - <Expr>",
+    "description": "replace + operator in binary expression with -",
+    "note": "The rule only applies to \"+\"-expressions. The rewritten expression should contain \"-\" instead.",
+    "example": "\"a + b\" should be rewritten to \"a - b\"",
+    "counterExample": "not applicable to \"c - d\" (wrong operator)"
+  },
+  {
+    "id": "2",
+    "rule": "<Expr> === <Expr> -> <Expr> !== <Expr>",
+    "description": "replace === operator in condition with !==",
+    "note": "The rule only applies to \"===\"-expressions. The rewritten expression should contain \"!==\" instead.",
+    "example": "\"a === b\" should be rewritten to \"a !== b\"",
+    "counterExample": "not applicable to \"c !== d\" (wrong operator)"
+  },
+  {
+    "id": "3",
+    "rule": "<Expr> !== <Expr> -> <Expr> === <Expr>",
+    "description": "replace !== operator in condition with ===",
+    "note": "The rule only applies to \"!==\"-expressions. The rewritten expression should contain \"===\" instead.",
+    "example": "\"a !== b\" should be rewritten to \"a === b\"",
+    "counterExample": "not applicable to \"c === d\" (wrong operator)"
+  },
+  {
+    "id": "4",
+    "rule": "<Expr> || {} -> <Expr>",
+    "description": "replace binary || expression with its first operand if the second operand is an empty object literal",
+    "note": "The rule applies only to \"||\"-expressions. The rewritten expression should not contain \"{}\" anymore.",
+    "example": "\"a || {}\" should be rewritten to \"a\"",
+    "counterExample": "not applicable to \"b || c\" because the second operand \"c\" is not an empty object literal."
+  },
+  {
+    "id": "5",
+    "rule": "return <Expr>; -> return !<Expr>;",
+    "description": "negate expression, but ONLY in a return statement",
+    "note": "The rule only applies to return statements. The rewritten expression should contain \"!\".",
+    "example": "\"return a;\" should be rewritten to \"return !a;\"",
+    "counterExample": "not applicable to \"if (a){ foo(); }\" because the expression \"a\" does not occur in a return statement."
+  }
+]

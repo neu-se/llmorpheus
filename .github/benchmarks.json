@@ -1,0 +1,81 @@
+[
+  {
+    "name": "countries-and-timezones",
+    "url": "https://github.com/manuelmhtr/countries-and-timezones/tree/241dd0f56dfc527bcd87779ae14ed67bd25c1c0e",
+    "edits": "sed -i -e 's/ && yarn run test:types//;s/rollup -c && //' package.json; sed -i \"s/sed -i ''/sed -i/g\" .fixTypes.sh",
+    "files": "src/**.js"
+  },
+  {
+    "name": "Complex.js",
+    "url": "https://github.com/infusion/Complex.js/tree/d995ca105e8adef4c38d0ace50643daf84e0dd1c",
+    "edits": "echo 'no edits'",
+    "files": "complex.js"
+  },
+  {
+    "name": "crawler-url-parser",
+    "url": "https://gitlab.com/autokent/crawler-url-parser/tree/202c5b25ad693d284804261e2b3815fe66e0723e",
+    "edits": "sed -i -e 's/\"mocha\": \"^4.0.1\"/\"mocha\": \"^7.2.0\"/' package.json",
+    "files": "./crawler-url-parser.js"
+  },
+  {
+    "name": "delta",
+    "url": "https://github.com/quilljs/delta/tree/5ffb853d645aa5b4c93e42aa52697e2824afc869",
+    "edits": "sed -i -e 's/types\\/node\": \"^17.0.21\"/types\\/node\": \"^18.9.0\"/' package.json",
+    "files": "./src/*.ts"
+  },
+  {
+    "name": "image-downloader",
+    "url": "https://gitlab.com/demsking/image-downloader/tree/19a53f652824bd0c612cc5bcd3a2eb173a16f938",
+    "edits": "echo 'no edits'",
+    "files": "./{index,lib/*}.js"
+  },
+  {
+    "name": "node-dirty",
+    "url": "https://github.com/felixge/node-dirty/tree/d7fb4d4ecf0cce144efa21b674965631a7955e61",
+    "edits": "echo 'no edits'",
+    "files": "./lib/**/*.js"
+  },
+  {
+    "name": "node-geo-point",
+    "url": "https://github.com/rainder/node-geo-point/tree/c839d477ff7a48d1fc6574495cbbc6196161f494",
+    "edits": "echo 'no edits'",
+    "files": "src/{geo-point,index}.ts"
+  },
+  {
+    "name": "node-jsonfile",
+    "url": "https://github.com/jprichardson/node-jsonfile/tree/9c6478a85899a9318547a6e9514b0403166d8c5c",
+    "edits": "sed -i -e 's/npm run lint && //' package.json",
+    "files": "./*.js"
+  },
+  {
+    "name": "plural",
+    "url": "https://github.com/swang/plural/tree/f0027d66ecb37ce0108c8bcb4a6a448d1bf64047",
+    "edits": "sed -i -e 's/\"mocha\": \"~2.0.0\"/\"mocha\": \"~7.2.0\"/' package.json",
+    "files": "./index.js"
+  },
+  {
+    "name": "pull-stream",
+    "url": "https://github.com/pull-stream/pull-stream/tree/29b4868bb3864c427c3988855c5d65ad5cb2cb1c",
+    "edits": "sed -i -e 's/npm run lint && //' package.json",
+    "files": "{index,pull,throughs/*,sources/*,sinks/*,util/*}.js"
+  }, 
+  {
+    "name": "q",
+    "url": "https://github.com/kriskowal/q/tree/6bc7f524eb104aca8bffde95f180b5210eb8dd4b",
+    "edits": "sed -i -e 's/ && npm run -s lint//' package.json",
+    "files":  "./{q,queue}.js" 
+  },
+  {
+    "name": "spacl-core",
+    "url": "https://gitlab.com/cptpackrat/spacl-core/tree/fcb8511a0d01bdc206582cfacb3e2b01a0288f6a",
+    "edits": "sed -i -e 's/types\\/node\": \"^17.0.8\"/types\\/node\": \"^18.9.0\"/' package.json; sed -i -e '/typedoc/d' package.json; sed -i -e '/prepack/s/,$//g' package.json",
+    "files": "./src/*.ts"
+  },
+  {
+    "name": "zip-a-folder",
+    "url": "https://github.com/maugenst/zip-a-folder/tree/d2ea465b20dc33cf8c98c58a7acaf875c586c3e1",
+    "edits": "sed -i -e 's/ && npm run lint//' package.json",
+    "files": "lib/*.ts"
+  }
+]
+

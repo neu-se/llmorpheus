@@ -1,0 +1,8 @@
+[
+  {
+    "name": "spacl-core",
+    "url": "https://gitlab.com/cptpackrat/spacl-core/tree/fcb8511a0d01bdc206582cfacb3e2b01a0288f6a",
+    "edits": "sed -i -e 's/types\\/node\": \"^17.0.8\"/types\\/node\": \"^18.9.0\"/' package.json; sed -i -e '/typedoc/d' package.json; sed -i -e '/prepack/s/,$//g' package.json",
+    "files": "./src/*.ts"
+  }
+]

@@ -1,0 +1,19 @@
+  Option 1: The PLACEHOLDER can be replaced with:
+```
+v + 1
+```
+This would result in different behavior because the `+ 1` operator would cause the value of `v` to be incremented by 1, which would change the order of the elements in the sorted list.
+
+Option 2: The PLACEHOLDER can be replaced with:
+```
+v - 1
+```
+This would result in different behavior because the `- 1` operator would cause the value of `v` to be decremented by 1, which would also change the order of the elements in the sorted list.
+
+Option 3: The PLACEHOLDER can be replaced with:
+```
+v * 2
+```
+This would result in different behavior because the `* 2` operator would cause the value of `v` to be multiplied by 2, which would change the order of the elements in the sorted list.
+
+DONE.

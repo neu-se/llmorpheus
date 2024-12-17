@@ -1,0 +1,19 @@
+  Option 1: The PLACEHOLDER can be replaced with:
+```
+this.right.copyInto
+```
+This would result in different behavior because it would cause the tree to be traversed in the opposite order, potentially leading to incorrect sorting.
+
+Option 2: The PLACEHOLDER can be replaced with:
+```
+this.left.copyInto(list, index + 1)
+```
+This would result in different behavior because it would cause the tree to be traversed in the same order, but with an offset of 1, potentially leading to incorrect sorting.
+
+Option 3: The PLACEHOLDER can be replaced with:
+```
+this.right.copyInto(list, index - 1)
+```
+This would result in different behavior because it would cause the tree to be traversed in the same order, but with an offset of -1, potentially leading to incorrect sorting.
+
+DONE.

@@ -1,0 +1,8 @@
+[
+  {
+    "name": "zip-a-folder",
+    "url": "https://github.com/maugenst/zip-a-folder/tree/d2ea465b20dc33cf8c98c58a7acaf875c586c3e1",
+    "edits": "sed -i -e 's/ && npm run lint//' package.json",
+    "files": "lib/**.ts"
+  }
+]

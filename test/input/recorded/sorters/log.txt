@@ -1,0 +1,48 @@
+Starting generation of mutants on: Thu, 16 May 2024 09:09:43 GMT
+
+generating mutants for the following files: src/TreeSorter.ts
+processing prompt 1/40
+processing prompt 2/40
+processing prompt 3/40
+processing prompt 4/40
+processing prompt 5/40
+processing prompt 6/40
+processing prompt 7/40
+processing prompt 8/40
+processing prompt 9/40
+processing prompt 10/40
+processing prompt 11/40
+processing prompt 12/40
+processing prompt 13/40
+processing prompt 14/40
+processing prompt 15/40
+processing prompt 16/40
+processing prompt 17/40
+processing prompt 18/40
+processing prompt 19/40
+processing prompt 20/40
+processing prompt 21/40
+processing prompt 22/40
+processing prompt 23/40
+processing prompt 24/40
+processing prompt 25/40
+processing prompt 26/40
+processing prompt 27/40
+processing prompt 28/40
+processing prompt 29/40
+processing prompt 30/40
+processing prompt 31/40
+processing prompt 32/40
+processing prompt 33/40
+processing prompt 34/40
+processing prompt 35/40
+processing prompt 36/40
+processing prompt 37/40
+processing prompt 38/40
+processing prompt 39/40
+processing prompt 40/40
+found 114 mutant candidates
+discarding 29 syntactically invalid mutants
+discarding 0 mutant candidates that are identical to the original code
+discarding 0 duplicate mutants
+wrote 85 mutants in 33 locations to /Users/franktip/sabbatical/sorters/Sorters/sorters/MUTATION_TESTING/template-full_codellama-34b-instruct_0.0/mutants.json

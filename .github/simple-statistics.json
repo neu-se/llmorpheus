@@ -1,0 +1,9 @@
+[
+  {
+    "name": "simple-statistics",
+    "url": "https://github.com/simple-statistics/simple-statistics/tree/31f037dd5550d554c4a96c3ee35b12e10a1c9cb7",
+    "edits": "sed -i -e 's/rollup -c rollup.config.js && npm run lint && tap --lines 95 --branches 95 --functions 95 --statements 95/tap --lines 50 --branches 50 --functions 50 --statements 50/' package.json",
+    "files": "./src/*.js"
+  }
+]
+

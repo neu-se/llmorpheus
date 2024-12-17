@@ -1,0 +1,19 @@
+  Option 1: The PLACEHOLDER can be replaced with:
+```
+this.left
+```
+This would result in different behavior because `this.left` is a reference to the left child node of the current node, whereas `this.value` is the value stored in the current node.
+
+Option 2: The PLACEHOLDER can be replaced with:
+```
+this.right
+```
+This would result in different behavior because `this.right` is a reference to the right child node of the current node, whereas `this.value` is the value stored in the current node.
+
+Option 3: The PLACEHOLDER can be replaced with:
+```
+this.value + 1
+```
+This would result in different behavior because `this.value + 1` is a different value than `this.value`, and would cause the tree to be sorted differently.
+
+DONE.
