@@ -180,9 +180,9 @@ jobs:
           cp LLMorpheusOutput.txt ${{ matrix.package.name }}/${{ matrix.package.name }}/LLMorpheusOutput.txt
 
       - name: Upload mutants info
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: mutants
+          name: mutants-${{ matrix.package.name }}
           path: ${{ matrix.package.name }}/${{ matrix.package.name }}
 
       - name: install stryker-js into benchmark and run stryker (precomputed mutators)
@@ -210,7 +210,7 @@ jobs:
           cp StrykerInfo.json results/results-${{ matrix.package.name }}/StrykerInfo.json
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: results-${{ matrix.package.name }}
           path: ${{ matrix.package.name }}/results
@@ -243,7 +243,7 @@ jobs:
           cd ../..
 
       - name: Upload combined output files
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: results
           path: results/results
@@ -288,7 +288,7 @@ jobs:
            more report.md > $GITHUB_STEP_SUMMARY
 
        - name: Upload report
-         uses: actions/upload-artifact@v3
+         uses: actions/upload-artifact@v4
          with:
            name: report.md
            path: llm-mutation-testing/report.md   
@@ -299,7 +299,7 @@ jobs:
            node .github/generateLatexTable.js "$title" ../results ../mutants > table.tex        
 
        - name: Upload table
-         uses: actions/upload-artifact@v3
+         uses: actions/upload-artifact@v4
          with:
            name: table.tex
            path: llm-mutation-testing/table.tex
