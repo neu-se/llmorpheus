@@ -41,7 +41,7 @@ function retrieveMutantsForProject(
   projectName: string
 ): Set<string> {
   const data = fs.readFileSync(
-    path.join(baseDir, run, "projects", projectName, "mutants.json"),
+    path.join(baseDir, run, "zip", projectName, "mutants.json"),
     "utf8"
   );
   return new Set(JSON.parse(data).map((x: any) => getMutantInfo(x)));
@@ -89,9 +89,7 @@ function findCommonMutants(
 
 function getModelName(baseDir: string, run: string): string {
   const file = fs.readFileSync(
-    path.join(
-      path.join(baseDir, run, "projects", projectNames[0], "summary.json")
-    ),
+    path.join(path.join(baseDir, run, "zip", projectNames[0], "summary.json")),
     "utf8"
   );
   const json = JSON.parse(file);
@@ -100,9 +98,7 @@ function getModelName(baseDir: string, run: string): string {
 
 function getTemperature(baseDir: string, run: string): string {
   const file = fs.readFileSync(
-    path.join(
-      path.join(baseDir, run, "projects", projectNames[0], "summary.json")
-    ),
+    path.join(path.join(baseDir, run, "zip", projectNames[0], "summary.json")),
     "utf8"
   );
   const json = JSON.parse(file);
@@ -116,17 +112,20 @@ function getTemperature(baseDir: string, run: string): string {
 /**
  * Generate a LaTeX table that shows the variability of mutants across runs.
  */
-function generateVariabilityTable(baseDir: string, runs: string[]): void {
-  let latexTable =
-    `% table generated using command: "node benchmark/computeVariability.js ${baseDir.substring(
-      baseDir.lastIndexOf("/") + 1
-    )}${runs.join(" ")}"\n` +
-    "\\begin{table}\n" +
-    "\\centering\n" +
-    "{\\footnotesize\n" +
-    "\\begin{tabular}{l|r|r|r|r}\n" +
-    "{\\bf application}  & {\\bf \\#min} &  {\\bf \\#max} &  {\\bf \\#distinct} & {\\bf \\#common}\\\\\n" +
-    "\\hline\n";
+export function generateVariabilityTable(
+  baseDir: string,
+  runs: string[]
+): string {
+  let latexTable = `
+% table generated using command: "node benchmark/computeVariability.js ${baseDir} ${runs.join(
+    " "
+  )}"
+\\begin{table}[hbt!]
+\\centering
+{\\footnotesize
+\\begin{tabular}{l|r|r|r|r}\n
+{\\bf application}  & {\\bf \\#min} &  {\\bf \\#max} &  {\\bf \\#distinct} & {\\bf \\#common}\\\\
+\\hline\n`;
   for (const projectName of projectNames) {
     const allMutants = findAllMutants(baseDir, runs, projectName);
     const allMutantsSize = allMutants.size;
@@ -148,8 +147,9 @@ function generateVariabilityTable(baseDir: string, runs: string[]): void {
     "\\end{tabular}\n}\n" +
     "\\caption{\n" +
     `  Variability of the mutants generated in 5 runs of \\ToolName using the \\textit{${modelName}} LLM
-       at temperature ${temperature}. The columns of the table show,\n` +
-    "  from left to right:  \n" +
+       at temperature ${temperature} \\ChangedText{(run ${runs.map((s) =>
+      s.replace("run", "\\#")
+    )})}. The columns of the table show, from left to right:\n` +
     "    (i) the minimum number of mutants observed in any of the runs,\n" +
     "    (ii) the maximum number of mutants observed in any of the runs,\n" +
     "    (iii) the total number of distinct mutants observed in all runs, and\n" +
@@ -157,11 +157,14 @@ function generateVariabilityTable(baseDir: string, runs: string[]): void {
     "}\n" +
     `\\label{table:Variability_${modelName}_${temperature}}\n` +
     "\\end{table}";
-  console.log(latexTable);
+  return latexTable;
 }
 
-// usage: node benchmark/computeVariability.js <baseDir> <list of subdirs
-
-const baseDir = process.argv[2];
-const runs = process.argv.slice(3);
-generateVariabilityTable(baseDir, runs);
+// to be executed from the command line only
+// usage: node benchmark/computeVariability.js <baseDir> <list of subdirs>
+if (require.main === module) {
+  const baseDir = process.argv[2];
+  const runs = process.argv.slice(3);
+  const table = generateVariabilityTable(baseDir, runs);
+  console.log(table);
+}
