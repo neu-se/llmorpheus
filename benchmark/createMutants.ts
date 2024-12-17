@@ -118,7 +118,6 @@ if (require.main === module) {
       metaInfo.mutate = argv.mutate;
       metaInfo.ignore = argv.ignore;
     } else {
-      
       metaInfo = {
         modelName: argv.model,
         temperature: argv.temperature,
