@@ -195,10 +195,6 @@ jobs:
           STRYKER_OPTIONS="${{ needs.setup.outputs.strykerOptions }}"
           (time npx stryker run $STRYKER_OPTIONS --usePrecomputed  --mutate $STRYKER_FILES)  2>&1 | tee -a StrykerOutput.txt
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}    
-
       - name: extract summary from StrykerOutput.txt
         run: |
           cd ${{ matrix.package.name }}
@@ -228,6 +224,9 @@ jobs:
     steps:
       - name: Download output zips
         uses: actions/download-artifact@v4.1.7
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }} 
       - name: Combine outputs
         run: |
           mkdir results
