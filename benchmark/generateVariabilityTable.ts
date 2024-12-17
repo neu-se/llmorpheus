@@ -89,9 +89,7 @@ function findCommonMutants(
 
 function getModelName(baseDir: string, run: string): string {
   const file = fs.readFileSync(
-    path.join(
-      path.join(baseDir, run, "zip", projectNames[0], "summary.json")
-    ),
+    path.join(path.join(baseDir, run, "zip", projectNames[0], "summary.json")),
     "utf8"
   );
   const json = JSON.parse(file);
@@ -100,9 +98,7 @@ function getModelName(baseDir: string, run: string): string {
 
 function getTemperature(baseDir: string, run: string): string {
   const file = fs.readFileSync(
-    path.join(
-      path.join(baseDir, run, "zip", projectNames[0], "summary.json")
-    ),
+    path.join(path.join(baseDir, run, "zip", projectNames[0], "summary.json")),
     "utf8"
   );
   const json = JSON.parse(file);
@@ -116,9 +112,14 @@ function getTemperature(baseDir: string, run: string): string {
 /**
  * Generate a LaTeX table that shows the variability of mutants across runs.
  */
-export function generateVariabilityTable(baseDir: string, runs: string[]): string {
+export function generateVariabilityTable(
+  baseDir: string,
+  runs: string[]
+): string {
   let latexTable = `
-% table generated using command: "node benchmark/computeVariability.js ${baseDir} ${runs.join(" ")}"
+% table generated using command: "node benchmark/computeVariability.js ${baseDir} ${runs.join(
+    " "
+  )}"
 \\begin{table}[hbt!]
 \\centering
 {\\footnotesize
@@ -146,7 +147,9 @@ export function generateVariabilityTable(baseDir: string, runs: string[]): strin
     "\\end{tabular}\n}\n" +
     "\\caption{\n" +
     `  Variability of the mutants generated in 5 runs of \\ToolName using the \\textit{${modelName}} LLM
-       at temperature ${temperature} \\ChangedText{(run ${runs.map(s => s.replace('run', '\\#'))})}. The columns of the table show, from left to right:\n` +
+       at temperature ${temperature} \\ChangedText{(run ${runs.map((s) =>
+      s.replace("run", "\\#")
+    )})}. The columns of the table show, from left to right:\n` +
     "    (i) the minimum number of mutants observed in any of the runs,\n" +
     "    (ii) the maximum number of mutants observed in any of the runs,\n" +
     "    (iii) the total number of distinct mutants observed in all runs, and\n" +

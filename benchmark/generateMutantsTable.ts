@@ -1,10 +1,10 @@
 import * as fs from "fs";
 import { unzip } from "zlib";
 
-/** 
+/**
  * Create header of latex table as shown above.
  */
-function createTableHeader(dirName: string, runNr: number) : string {
+function createTableHeader(dirName: string, runNr: number): string {
   return `
 % table generated using command: "node benchmark/generateMutantsTable.js ${dirName} ${runNr}"
 \\begin{table*}[hbt!]
@@ -17,8 +17,8 @@ function createTableHeader(dirName: string, runNr: number) : string {
   `;
 }
 
-export function getTemperature(dirName: string){
-  const firstBenchmarkName = 'delta';
+export function getTemperature(dirName: string) {
+  const firstBenchmarkName = "delta";
   const firstBenchmarkFile = fs.readFileSync(
     `${dirName}/${firstBenchmarkName}/summary.json`,
     "utf8"
@@ -34,22 +34,22 @@ export function getTemperature(dirName: string){
   return temperature;
 }
 
-export function getTemplate(dirName: string){
-  // const results = fs.readdirSync(dirName);  
-  const firstBenchmarkName = 'delta';
+export function getTemplate(dirName: string) {
+  // const results = fs.readdirSync(dirName);
+  const firstBenchmarkName = "delta";
   const firstBenchmarkFile = fs.readFileSync(
     `${dirName}/${firstBenchmarkName}/summary.json`,
     "utf8"
   );
   const firstSummary = JSON.parse(firstBenchmarkFile);
-  let template = firstSummary.metaInfo.template;  
-  template = template.substring(template.indexOf('/') + 1); 
+  let template = firstSummary.metaInfo.template;
+  template = template.substring(template.indexOf("/") + 1);
   // remove ".hb" at the end
   template = template.substring(0, template.length - 3);
   return template;
 }
 
-function createTableFooter(dirName: string, runNr: number) : string {
+function createTableFooter(dirName: string, runNr: number): string {
   // get meta-info from first benchmark
   const firstBenchmarkName = "delta";
   const firstBenchmarkFile = fs.readFileSync(
@@ -67,8 +67,8 @@ function createTableFooter(dirName: string, runNr: number) : string {
   }
   const maxTokens = firstSummary.metaInfo.maxTokens;
   const maxNrPrompts = firstSummary.metaInfo.maxNrPrompts;
-  let template = firstSummary.metaInfo.template;  
-  template = template.substring(template.indexOf('/') + 1); 
+  let template = firstSummary.metaInfo.template;
+  template = template.substring(template.indexOf("/") + 1);
   const systemPrompt = firstSummary.metaInfo.systemPrompt;
   const rateLimit = firstSummary.metaInfo.rateLimit;
   const nrAttempts = firstSummary.metaInfo.nrAttempts;
@@ -92,18 +92,19 @@ function createTableFooter(dirName: string, runNr: number) : string {
 
 function unzipDirIfNeccessary(dirName: string) {
   const results = fs.readdirSync(dirName);
-  if (!results.includes('delta')) {
+  if (!results.includes("delta")) {
     // unzip "mutants.zip" and "results.zip" in dirName
-    for (const zipFile of ['mutants.zip', 'results.zip']) {
+    for (const zipFile of ["mutants.zip", "results.zip"]) {
       // execute shell command to unzip
-      const execSync = require('child_process').execSync;
-      execSync(`unzip ${dirName}/${zipFile} -d ${dirName}`, { stdio: 'inherit' });
+      const execSync = require("child_process").execSync;
+      execSync(`unzip ${dirName}/${zipFile} -d ${dirName}`, {
+        stdio: "inherit",
+      });
     }
   }
 }
 
-
-export function generateMutantsTable(dirName: string, runNr: number) : string {
+export function generateMutantsTable(dirName: string, runNr: number): string {
   unzipDirIfNeccessary(dirName);
   let result = createTableHeader(dirName, runNr);
   const results = fs.readdirSync(dirName);
@@ -116,41 +117,49 @@ export function generateMutantsTable(dirName: string, runNr: number) : string {
   let totalNrKilled = 0;
   let totalNrSurvived = 0;
   let totalNrTimedOut = 0;
-  
+
   for (const projectName of results) {
     // skip directories and zip files
     if (projectName.endsWith(".zip")) continue;
     if (!fs.lstatSync(`${dirName}/${projectName}`).isDirectory()) continue;
     result += `\\hline\n`;
     if (!fs.existsSync(`${dirName}/${projectName}/summary.json`)) {
-      throw new Error(`summary.json file not found in ${dirName}/${projectName}`);
+      throw new Error(
+        `summary.json file not found in ${dirName}/${projectName}`
+      );
     }
     if (!fs.existsSync(`${dirName}/${projectName}/StrykerInfo.json`)) {
-      throw new Error(`StrykerInfo.json file not found in ${dirName}/${projectName}`);
+      throw new Error(
+        `StrykerInfo.json file not found in ${dirName}/${projectName}`
+      );
     }
-     
-    const jsonLLMorpheusObj = JSON.parse(fs.readFileSync(
-      `${dirName}/${projectName}/summary.json`,
-      "utf8"
-    ));
+
+    const jsonLLMorpheusObj = JSON.parse(
+      fs.readFileSync(`${dirName}/${projectName}/summary.json`, "utf8")
+    );
     const nrPrompts = parseInt(jsonLLMorpheusObj.nrPrompts);
-    const nrCandidates = parseInt(jsonLLMorpheusObj.nrCandidates + jsonLLMorpheusObj.nrDuplicate);
-    const nrSyntacticallyInvalid = parseInt(jsonLLMorpheusObj.nrSyntacticallyInvalid);
+    const nrCandidates = parseInt(
+      jsonLLMorpheusObj.nrCandidates + jsonLLMorpheusObj.nrDuplicate
+    );
+    const nrSyntacticallyInvalid = parseInt(
+      jsonLLMorpheusObj.nrSyntacticallyInvalid
+    );
     const nrIdentical = parseInt(jsonLLMorpheusObj.nrIdentical);
     const nrDuplicate = parseInt(jsonLLMorpheusObj.nrDuplicate);
-    
-    const jsonStrykerObj = JSON.parse(fs.readFileSync(
-      `${dirName}/${projectName}/StrykerInfo.json`,
-      "utf8"
-    ));
-  
+
+    const jsonStrykerObj = JSON.parse(
+      fs.readFileSync(`${dirName}/${projectName}/StrykerInfo.json`, "utf8")
+    );
+
     const nrKilled = parseInt(jsonStrykerObj.nrKilled);
     const nrSurvived = parseInt(jsonStrykerObj.nrSurvived);
     const nrTimedOut = parseInt(jsonStrykerObj.nrTimedOut);
     const nrMutants = nrKilled + nrSurvived + nrTimedOut;
     const mutScore = jsonStrykerObj.mutationScore;
-    
-    result += `\\textit{${projectName}} & ${nrPrompts} & \\ChangedText\{${nrCandidates}\} & \\ChangedText\{${nrSyntacticallyInvalid}\} & \\ChangedText\{${nrIdentical}\} & \\ChangedText\{${nrDuplicate}\} & ${nrMutants} & ${nrKilled} & ${nrSurvived} & ${nrTimedOut} & ${parseFloat(mutScore).toFixed(2)} \\\\ \n`;   
+
+    result += `\\textit{${projectName}} & ${nrPrompts} & \\ChangedText\{${nrCandidates}\} & \\ChangedText\{${nrSyntacticallyInvalid}\} & \\ChangedText\{${nrIdentical}\} & \\ChangedText\{${nrDuplicate}\} & ${nrMutants} & ${nrKilled} & ${nrSurvived} & ${nrTimedOut} & ${parseFloat(
+      mutScore
+    ).toFixed(2)} \\\\ \n`;
 
     totalNrPrompts += nrPrompts;
     totalNrCandidates += nrCandidates;
@@ -171,15 +180,15 @@ export function generateMutantsTable(dirName: string, runNr: number) : string {
 // to be executed from the command line only
 if (require.main === module) {
   const dirName = process.argv[2]; // read dirName from command line
-  const pathEntries = dirName.split('/');
-  const lastEntry = pathEntries[pathEntries.length-1];
-  if (!lastEntry.startsWith('run')){
-    throw new Error("Usage: node <path-to-llmorpheus>/benchmark/generateMutantsTable.js <path-to-run>");
+  const pathEntries = dirName.split("/");
+  const lastEntry = pathEntries[pathEntries.length - 1];
+  if (!lastEntry.startsWith("run")) {
+    throw new Error(
+      "Usage: node <path-to-llmorpheus>/benchmark/generateMutantsTable.js <path-to-run>"
+    );
   }
   const runNr = parseInt(lastEntry.substring(3));
-  const table = generateMutantsTable(dirName + '/zip', runNr);
+  const table = generateMutantsTable(dirName + "/zip", runNr);
 
   console.log(table);
 }
-  
-
