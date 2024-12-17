@@ -28,7 +28,7 @@ on:
           - "mixtral-8x22b"
           - "llama-2-13b-chat"
           - "llama-2-70b-chat"
-        default: "codellama-34b-instruct"
+        default: "gpt-4o-mini"
       # rateLimit:
       #     description: "number of milliseconds between requests sent to the LLM"
       #     type: number
@@ -36,7 +36,7 @@ on:
       benchmarkMode:
           description: "use custom rate limiting for benchmarking"
           type: "boolean"
-          default: true
+          default: false
       maxNrPrompts:
           type: number
           description: "maximum number of prompts to produce"
