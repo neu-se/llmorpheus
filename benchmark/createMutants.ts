@@ -118,22 +118,6 @@ if (require.main === module) {
       metaInfo.mutate = argv.mutate;
       metaInfo.ignore = argv.ignore;
     } else {
-      const supportedModels = [
-        "codellama-13b-instruct",
-        "codellama-34b-instruct",
-        "mistral-7b-instruct",
-        "mixtral-8x7b-instruct",
-        "mixtral-8x22b",
-        "llama-2-13b-chat",
-        "llama-2-70b-chat",
-      ];
-
-      if (!supportedModels.includes(argv.model)) {
-        console.error(`Invalid model name: ${argv.model}`);
-        console.error(`Supported models are: ${supportedModels.join(", ")}`);
-        process.exit(1);
-      }
-
       metaInfo = {
         modelName: argv.model,
         temperature: argv.temperature,
@@ -147,12 +131,6 @@ if (require.main === module) {
         ignore: argv.ignore,
         benchmark: argv.benchmark,
       };
-
-      if (!supportedModels.includes(argv.model)) {
-        console.error(`Invalid model name: ${argv.model}`);
-        console.error(`Supported models are: ${supportedModels.join(", ")}`);
-        process.exit(1);
-      }
 
       const baseModel = new Model(
         argv.model,
