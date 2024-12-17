@@ -20,6 +20,7 @@ on:
         description: "Which LLM API to use"
         type: choice
         options:
+          - "gpt-4o-mini"
           - "codellama-13b-instruct"
           - "codellama-34b-instruct"
           - "mistral-7b-instruct"
