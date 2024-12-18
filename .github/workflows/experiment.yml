@@ -253,8 +253,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-       - name: Download combined output files
+       - name: Download LLMorpheus results
          uses: actions/download-artifact@v4
+         with:
+            name: mutants-*
+            path: mutants
+            
+       - name: Download Stryker results
+         uses: actions/download-artifact@v4
+         with:
+            name: results-*
+            path: results
+
 
        - name: Check out llm-mutation-testing
          uses: actions/checkout@v3
