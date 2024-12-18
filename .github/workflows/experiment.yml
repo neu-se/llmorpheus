@@ -28,7 +28,7 @@ on:
           - "mixtral-8x22b"
           - "llama-2-13b-chat"
           - "llama-2-70b-chat"
-        default: "codellama-34b-instruct"
+        default: "gpt-4o-mini"
       # rateLimit:
       #     description: "number of milliseconds between requests sent to the LLM"
       #     type: number
@@ -36,7 +36,7 @@ on:
       benchmarkMode:
           description: "use custom rate limiting for benchmarking"
           type: "boolean"
-          default: true
+          default: false
       maxNrPrompts:
           type: number
           description: "maximum number of prompts to produce"
@@ -180,9 +180,9 @@ jobs:
           cp LLMorpheusOutput.txt ${{ matrix.package.name }}/${{ matrix.package.name }}/LLMorpheusOutput.txt
 
       - name: Upload mutants info
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: mutants
+          name: mutants-${{ matrix.package.name }}
           path: ${{ matrix.package.name }}/${{ matrix.package.name }}
 
       - name: install stryker-js into benchmark and run stryker (precomputed mutators)
@@ -194,10 +194,6 @@ jobs:
           STRYKER_FILES=$(node ../llm-mutation-testing/.github/expandGlob.js $(pwd) "${{ matrix.package.files }}" "${{ matrix.package.ignore }}")
           STRYKER_OPTIONS="${{ needs.setup.outputs.strykerOptions }}"
           (time npx stryker run $STRYKER_OPTIONS --usePrecomputed  --mutate $STRYKER_FILES)  2>&1 | tee -a StrykerOutput.txt
-
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}    
 
       - name: extract summary from StrykerOutput.txt
         run: |
@@ -214,7 +210,7 @@ jobs:
           cp StrykerInfo.json results/results-${{ matrix.package.name }}/StrykerInfo.json
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: results-${{ matrix.package.name }}
           path: ${{ matrix.package.name }}/results
@@ -227,7 +223,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download output zips
-        uses: actions/download-artifact@v4.1.7
+        uses: actions/download-artifact@v4 
       - name: Combine outputs
         run: |
           mkdir results
@@ -244,7 +240,7 @@ jobs:
           cd ../..
 
       - name: Upload combined output files
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: results
           path: results/results
@@ -257,23 +253,57 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-       - name: Download combined output files
-         uses: actions/download-artifact@v4.1.7
-         with:
-           name: results
-           path: results
+       
 
-       - name: Download combined output files
-         uses: actions/download-artifact@v4.1.7
+       # download all files mutants-*   
+       - name: Download LLMorpheus results
+         uses: actions/download-artifact@v4
          with:
-           name: mutants
-           path: mutants     
+            pattern: "mutants-*"
+
+       # download all files results-*   
+       - name: Download Stryker results
+         uses: actions/download-artifact@v4
+         with:
+           pattern: "results-*"
+
+       # move all mutants-* directories into a single directory
+       - name: Gather mutants into single directory
+         run: |
+           mkdir mutants
+           cd mutants
+           for mutants in ../mutants-*
+           do
+             # remove "../mutants-" prefix, leaving only the benchmark name
+             name=$(echo $mutants | sed 's/\.\.\/mutants-//')
+             echo "moving $mutants to $name"
+             mv $mutants/* $name 
+           done
+           cd ..
+           
+       # move all results-* directories into a single directory
+       - name: Gather Stryker results into single directory
+         run: |
+           mkdir results
+           cd results
+           for results in ../results-*
+           do
+             # extract benchmark name
+             name=$(echo $results | sed 's/\.\.\/results-//')
+             echo "moving $results to $name"
+             mv $results/* $name 
+           done
+           cd .. 
 
        - name: Check out llm-mutation-testing
          uses: actions/checkout@v3
          with:
-           path: llm-mutation-testing 
+           path: llm-mutation-testing
 
+       - name: Setup tmate session
+         uses: mxschmitt/action-tmate@v3
+         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+           
        - name: Generate report
          run: |
            cd llm-mutation-testing
@@ -289,7 +319,7 @@ jobs:
            more report.md > $GITHUB_STEP_SUMMARY
 
        - name: Upload report
-         uses: actions/upload-artifact@v2
+         uses: actions/upload-artifact@v4
          with:
            name: report.md
            path: llm-mutation-testing/report.md   
@@ -300,7 +330,7 @@ jobs:
            node .github/generateLatexTable.js "$title" ../results ../mutants > table.tex        
 
        - name: Upload table
-         uses: actions/upload-artifact@v2
+         uses: actions/upload-artifact@v4
          with:
            name: table.tex
            path: llm-mutation-testing/table.tex
