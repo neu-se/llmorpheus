@@ -223,9 +223,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download output zips
-        uses: actions/download-artifact@v4.1.7
-        with:
-          name: mutants-*
+        uses: actions/download-artifact@v4
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }} 
@@ -259,13 +257,13 @@ jobs:
 
     steps:
        - name: Download combined output files
-         uses: actions/download-artifact@v4.1.7
+         uses: actions/download-artifact@v4
          with:
            name: results
            path: results
 
        - name: Download combined output files
-         uses: actions/download-artifact@v4.1.7
+         uses: actions/download-artifact@v4
          with:
            name: mutants
            path: mutants     
