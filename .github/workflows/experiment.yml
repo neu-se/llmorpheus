@@ -292,7 +292,7 @@ jobs:
            for results in ../results-*
            do
              # extract benchmark name
-             name=$(echo $results | sed 's/..\/..\/mutants-//')
+             name=$(echo $results | sed 's/..\/..\/results-//')
              mv $results $name 
            done
            cd .. 
