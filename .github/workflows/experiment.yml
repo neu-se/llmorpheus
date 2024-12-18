@@ -267,6 +267,32 @@ jobs:
          with:
            pattern: "results-*"
 
+       # move all mutants-* directories into a single directory
+       - name: Gather mutants into single directory
+         run: |
+           mkdir mutants
+           cd mutants
+           for mutants in ../mutants-*
+           do
+             # extract benchmark name
+             name=$(echo $mutants | sed 's/..\/..\/mutants-//')
+             mv ../$mutants-$name $name 
+           done
+           cd ..
+           
+       # move all results-* directories into a single directory
+       - name: Gather Stryker results into single directory
+         run: |
+           mkdir results
+           cd results
+           for results in ../results-*
+           do
+             # extract benchmark name
+             name=$(echo $results | sed 's/..\/..\/mutants-//')
+             mv ../$results-$name $name 
+           done
+           cd ..
+             
        - name: Setup tmate session
          uses: mxschmitt/action-tmate@v3
          if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}  
