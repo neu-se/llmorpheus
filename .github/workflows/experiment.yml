@@ -278,9 +278,9 @@ jobs:
            cd mutants
            for mutants in ../mutants-*
            do
-             # extract benchmark name
-             name=$(echo $mutants | sed 's/..\/..\/mutants-//')
-             mv ../$mutants-$name $name 
+             # remove "../mutants-" prefix, leaving only the benchmark name
+             name=$(echo $mutants | sed 's/\.\.\/mutants-//')
+             mv $mutants $name 
            done
            cd ..
            
@@ -293,10 +293,9 @@ jobs:
            do
              # extract benchmark name
              name=$(echo $results | sed 's/..\/..\/mutants-//')
-             mv ../$results-$name $name 
+             mv $results $name 
            done
-           cd ..
- 
+           cd .. 
 
        - name: Check out llm-mutation-testing
          uses: actions/checkout@v3
