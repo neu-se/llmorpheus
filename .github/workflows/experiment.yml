@@ -266,6 +266,10 @@ jobs:
          uses: actions/download-artifact@v4
          with:
            pattern: "results-*"
+             
+       - name: Setup tmate session
+         uses: mxschmitt/action-tmate@v3
+         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
 
        # move all mutants-* directories into a single directory
        - name: Gather mutants into single directory
@@ -292,10 +296,7 @@ jobs:
              mv ../$results-$name $name 
            done
            cd ..
-             
-       - name: Setup tmate session
-         uses: mxschmitt/action-tmate@v3
-         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}  
+ 
 
        - name: Check out llm-mutation-testing
          uses: actions/checkout@v3
