@@ -136,6 +136,10 @@ jobs:
           cd ${{ matrix.package.name }}
           git checkout ${{ matrix.package.sha }}
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+
       - name: build project
         run: |
           cd ${{ matrix.package.name }}
@@ -299,10 +303,6 @@ jobs:
          uses: actions/checkout@v3
          with:
            path: llm-mutation-testing
-
-       - name: Setup tmate session
-         uses: mxschmitt/action-tmate@v3
-         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
            
        - name: Generate report
          run: |
