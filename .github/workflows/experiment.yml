@@ -277,7 +277,7 @@ jobs:
              # remove "../mutants-" prefix, leaving only the benchmark name
              name=$(echo $mutants | sed 's/\.\.\/mutants-//')
              echo "moving $mutants to $name"
-             mv $mutants $name 
+             mv $mutants/* $name 
            done
            cd ..
            
@@ -291,7 +291,7 @@ jobs:
              # extract benchmark name
              name=$(echo $results | sed 's/\.\.\/results-//')
              echo "moving $results to $name"
-             mv $results $name 
+             mv $results/* $name 
            done
            cd .. 
 
