@@ -5,7 +5,7 @@ on:
     inputs:
       packages:
         description: "JSON file that specifies packages to generate mutants for"
-        default: "benchmarks.json"
+        default: "delta.json"
       template:
         description: "Template to use for generating mutants"
         default: "template-full"
@@ -40,7 +40,7 @@ on:
       maxNrPrompts:
           type: number
           description: "maximum number of prompts to produce"
-          default: 2000
+          default: 5
       maxTokensInCompletion:
           type: number
           description: "maximum number of tokens in a completion"
