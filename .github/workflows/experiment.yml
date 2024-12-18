@@ -223,10 +223,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download output zips
-        uses: actions/download-artifact@v4
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }} 
+        uses: actions/download-artifact@v4 
       - name: Combine outputs
         run: |
           mkdir results
@@ -265,14 +262,18 @@ jobs:
        - name: Download combined output files
          uses: actions/download-artifact@v4
          with:
-           name: mutants
+           name: mutants-*
            path: mutants     
 
        - name: Check out llm-mutation-testing
          uses: actions/checkout@v3
          with:
-           path: llm-mutation-testing 
-
+           path: llm-mutation-testing
+           
+       - name: Setup tmate session
+         uses: mxschmitt/action-tmate@v3
+         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+        
        - name: Generate report
          run: |
            cd llm-mutation-testing
