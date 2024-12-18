@@ -253,8 +253,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+       
+
+       # download all files mutants-*   
        - name: Download LLMorpheus results
          uses: actions/download-artifact@v4
+         with:
+            pattern: "mutants-*"
+
+       # download all files results-*   
+       - name: Download Stryker results
+         uses: actions/download-artifact@v4
+         with:
+           pattern: "results-*"
 
        - name: Setup tmate session
          uses: mxschmitt/action-tmate@v3
