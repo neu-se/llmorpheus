@@ -10,8 +10,8 @@ function generateReport(title, dirName, mutantsDirName){
 
 function generateLLMorpheusReport(title, dirName, mutantsDirName){
   let report = `# ${title}\n`
-  report += '| Project | #Prompts | #Mutants | #Killed | #Survived | #Timeout | MutationScore | LLMorpheus Time | Stryker Time | #Prompt Tokens | #Completion Tokens | #Total Tokens  |\n';
-  report += '|:--------|:---------|:---------|:--------|:----------|----------|---------------|-----------------|--------------|----------------|--------------------|----------------|\n';
+  report += '| Project | #Prompts | #Mutants | #Killed | #Survived | #Timeout | MutationScore | LLMorpheus Time | Stryker Time | #Prompt Tokens | #Completion Tokens | #Total Tokens  | #Retries | # Failures |\n';
+  report += '|:--------|:---------|:---------|:--------|:----------|----------|---------------|-----------------|--------------|----------------|--------------------|----------------|----------|------------|\n';
   const files = fs.readdirSync(dirName);
   let totalMutants = 0;
   let totalKilled = 0;
