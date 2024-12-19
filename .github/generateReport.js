@@ -23,6 +23,8 @@ function generateLLMorpheusReport(title, dirName, mutantsDirName){
   let totalPromptTokens = 0;
   let totalCompletionTokens = 0;
   let totalTotalTokens = 0;
+  let totalNrRetries = 0;
+  let totalNrFailures = 0;
   for (const benchmark of files) {  
     const data = fs.readFileSync(`${dirName}/${benchmark}/StrykerInfo.json`, 'utf8');
     const jsonObj = JSON.parse(data);
