@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import { IModel } from "./IModel";
+import { IModel, IModelFailureCounter } from "./IModel";
 import { PostOptions, defaultPostOptions } from "./IModel";
 import { IQueryResult } from "./IQueryResult";
 
@@ -19,6 +19,11 @@ export class CachingModel implements IModel {
     this.modelName = `${model.getModelName()}`;
     console.log(`Using cache dir: ${cacheDir}`);
   }
+
+  getFailureCounter(): IModelFailureCounter {
+    return this.model.getFailureCounter();
+  }
+  
   getModelName(): string {
     return `${this.modelName}`;
   }

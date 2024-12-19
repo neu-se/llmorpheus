@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import { IModel } from "./IModel";
+import { IModel, IModelFailureCounter } from "./IModel";
 import { defaultPostOptions } from "./IModel";
 import { IQueryResult } from "./IQueryResult";
 
@@ -14,6 +14,10 @@ export class MockModel implements IModel {
   private mockOptions = { max_tokens: 250, temperature: 0, top_p: 1 };
   constructor(modelName: string, private modelDir: string) {
     this.modelName = `${modelName}`;
+  }
+  
+  getFailureCounter(): IModelFailureCounter {
+    return { nrRetries: 0, nrFailures: 0 };
   }
 
   getModelName(): string {

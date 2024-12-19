@@ -7,7 +7,7 @@ import {
   RateLimiter,
 } from "../util/promise-utils";
 import { retry } from "../util/promise-utils";
-import { IModel } from "./IModel";
+import { IModel, IModelFailureCounter } from "./IModel";
 import { PostOptions, defaultPostOptions } from "./IModel";
 import { getEnv } from "../util/code-utils";
 import { IQueryResult } from "./IQueryResult";
@@ -26,6 +26,7 @@ export class Model implements IModel {
 
   protected instanceOptions: PostOptions;
   protected rateLimiter: RateLimiter;
+  protected counter: IModelFailureCounter = { nrRetries: 0, nrFailures: 0 };
 
   constructor(
     private modelName: string,
@@ -114,11 +115,14 @@ export class Model implements IModel {
               headers: Model.LLMORPHEUS_LLM_AUTH_HEADERS,
             })
           ),
-        this.metaInfo.nrAttempts
-      );
+        this.metaInfo.nrAttempts,
+        () => {
+          this.counter.nrRetries++;
+        })
     } catch (e) {
       if (res?.status === 429) {
         console.error(`*** 429 error: ${e}`);
+        this.counter.nrFailures++;
       }
       throw e;
     }
@@ -154,5 +158,9 @@ export class Model implements IModel {
       completion_tokens,
       total_tokens,
     };
+  }
+
+  public getFailureCounter(): IModelFailureCounter {
+    return this.counter;
   }
 }

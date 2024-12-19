@@ -413,6 +413,8 @@ export class MutantGenerator {
     const nrSyntacticallyInvalid = this.mutationStats.nrSyntacticallyInvalid;
     const nrIdentical = this.mutationStats.nrIdentical;
     const nrDuplicate = this.mutationStats.nrDuplicate;
+    const nrRetries = this.model.getFailureCounter().nrRetries;
+    const nrFailures = this.model.getFailureCounter().nrFailures;
     fs.writeFileSync(
       resultsFileName,
       JSON.stringify(
@@ -428,11 +430,14 @@ export class MutantGenerator {
           totalCompletionTokens: this.mutationStats.totalCompletionTokens,
           totalTokens: this.mutationStats.totalTokens,
           metaInfo: this.metaInfo,
+          nrRetries,
+          nrFailures
         },
         null,
         2
       )
     );
+    console.log(`nrRetries = ${nrRetries}, nrFailures = ${nrFailures}`);
     console.log(`summary written to  ${resultsFileName}\n`);
 
     this.printAndLog(

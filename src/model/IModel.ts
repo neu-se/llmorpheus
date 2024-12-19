@@ -11,6 +11,7 @@ export interface IModel {
   getModelName(): string;
   getTemperature(): number;
   getMaxTokens(): number;
+  getFailureCounter(): IModelFailureCounter;
 }
 
 export const defaultPostOptions = {
@@ -27,3 +28,8 @@ export const defaultOpenAIPostoptions = {
 
 export type PostOptions = Partial<typeof defaultPostOptions>;
 export type OpenAIPostOptions = Partial<typeof defaultOpenAIPostoptions>;
+
+export interface IModelFailureCounter {
+  nrRetries: number;
+  nrFailures: number;
+};
