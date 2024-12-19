@@ -21,5 +21,7 @@
     "ignore": "src/**/*.spec.ts",
     "rateLimit": 1000,
     "benchmark": false
-  }
+  },
+  "nrRetries": 0,
+  "nrFailures": 0
 }
