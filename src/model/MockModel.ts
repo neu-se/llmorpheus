@@ -15,7 +15,7 @@ export class MockModel implements IModel {
   constructor(modelName: string, private modelDir: string) {
     this.modelName = `${modelName}`;
   }
-  
+
   getFailureCounter(): IModelFailureCounter {
     return { nrRetries: 0, nrFailures: 0 };
   }

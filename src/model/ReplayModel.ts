@@ -20,7 +20,7 @@ export class ReplayModel implements IModel {
     console.log(`*** metaInfo: ${JSON.stringify(summaryInfo.metaInfo)}`);
     this.initializeMap();
   }
-  
+
   getFailureCounter(): IModelFailureCounter {
     return { nrFailures: 0, nrRetries: 0 };
   }

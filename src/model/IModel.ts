@@ -32,4 +32,4 @@ export type OpenAIPostOptions = Partial<typeof defaultOpenAIPostoptions>;
 export interface IModelFailureCounter {
   nrRetries: number;
   nrFailures: number;
-};
+}

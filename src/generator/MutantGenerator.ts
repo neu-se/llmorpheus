@@ -431,7 +431,7 @@ export class MutantGenerator {
           totalTokens: this.mutationStats.totalTokens,
           metaInfo: this.metaInfo,
           nrRetries,
-          nrFailures
+          nrFailures,
         },
         null,
         2

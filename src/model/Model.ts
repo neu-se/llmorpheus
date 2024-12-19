@@ -118,7 +118,8 @@ export class Model implements IModel {
         this.metaInfo.nrAttempts,
         () => {
           this.counter.nrRetries++;
-        })
+        }
+      );
     } catch (e) {
       if (res?.status === 429) {
         console.error(`*** 429 error: ${e}`);

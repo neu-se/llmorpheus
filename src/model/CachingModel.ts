@@ -23,7 +23,7 @@ export class CachingModel implements IModel {
   getFailureCounter(): IModelFailureCounter {
     return this.model.getFailureCounter();
   }
-  
+
   getModelName(): string {
     return `${this.modelName}`;
   }
