@@ -10,8 +10,8 @@ function generateReport(title, dirName, mutantsDirName){
 
 function generateLLMorpheusReport(title, dirName, mutantsDirName){
   let report = `# ${title}\n`
-  report += '| Project | #Prompts | #Mutants | #Killed | #Survived | #Timeout | MutationScore | LLMorpheus Time | Stryker Time | #Prompt Tokens | #Completion Tokens | #Total Tokens  |\n';
-  report += '|:--------|:---------|:---------|:--------|:----------|----------|---------------|-----------------|--------------|----------------|--------------------|----------------|\n';
+  report += '| Project | #Prompts | #Mutants | #Killed | #Survived | #Timeout | MutationScore | LLMorpheus Time | Stryker Time | #Prompt Tokens | #Completion Tokens | #Total Tokens  | #Retries | # Failures |\n';
+  report += '|:--------|:---------|:---------|:--------|:----------|----------|---------------|-----------------|--------------|----------------|--------------------|----------------|----------|------------|\n';
   const files = fs.readdirSync(dirName);
   let totalMutants = 0;
   let totalKilled = 0;
@@ -23,6 +23,8 @@ function generateLLMorpheusReport(title, dirName, mutantsDirName){
   let totalPromptTokens = 0;
   let totalCompletionTokens = 0;
   let totalTotalTokens = 0;
+  let totalNrRetries = 0;
+  let totalNrFailures = 0;
   for (const benchmark of files) {  
     const data = fs.readFileSync(`${dirName}/${benchmark}/StrykerInfo.json`, 'utf8');
     const jsonObj = JSON.parse(data);
@@ -54,9 +56,13 @@ function generateLLMorpheusReport(title, dirName, mutantsDirName){
     totalCompletionTokens += nrCompletionTokens;
     const nrTotalTokens = llmJsonObj.totalTokens;
     totalTotalTokens += nrTotalTokens;
-    report += `| ${benchmark} | ${nrPrompts} | ${nrTotal} | ${nrKilled} | ${nrSurvived} | ${nrTimedOut} | ${mutationScore} | ${llmorpheusTime} | ${strykerTime} | ${nrPromptTokens} | ${nrCompletionTokens} | ${nrTotalTokens} |\n`;
+    nrRetries = llmJsonObj.nrRetries;
+    totalNrRetries += nrRetries;
+    nrFailures = llmJsonObj.nrFailures;
+    totalNrFailures += nrFailures;
+    report += `| ${benchmark} | ${nrPrompts} | ${nrTotal} | ${nrKilled} | ${nrSurvived} | ${nrTimedOut} | ${mutationScore} | ${llmorpheusTime} | ${strykerTime} | ${nrPromptTokens} | ${nrCompletionTokens} | ${nrTotalTokens} | ${nrRetries} | ${nrFailures} |\n`;
   } 
-  report += `| Total | ${totalPrompts} | ${totalMutants} | ${totalKilled} | ${totalSurvived} | ${totalTimedOut} | - | ${totalLLMorpheusTime.toFixed(2)} | ${totalStrykerTime.toFixed(2)} | ${totalPromptTokens} | ${totalCompletionTokens} | ${totalTotalTokens} |\n`;
+  report += `| Total | ${totalPrompts} | ${totalMutants} | ${totalKilled} | ${totalSurvived} | ${totalTimedOut} | - | ${totalLLMorpheusTime.toFixed(2)} | ${totalStrykerTime.toFixed(2)} | ${totalPromptTokens} | ${totalCompletionTokens} | ${totalTotalTokens} | ${totalNrRetries} | ${totalNrFailures} |\n`;
 
   const metaData = retrieveMetaData(mutantsDirName);
   

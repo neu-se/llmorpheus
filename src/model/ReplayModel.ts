@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { IModel } from "./IModel";
+import { IModel, IModelFailureCounter } from "./IModel";
 import { IQueryResult } from "./IQueryResult";
 import { MetaInfo } from "../generator/MetaInfo";
 
@@ -19,6 +19,10 @@ export class ReplayModel implements IModel {
     console.log(`*** replaying execution from directory ${this.dirName}`);
     console.log(`*** metaInfo: ${JSON.stringify(summaryInfo.metaInfo)}`);
     this.initializeMap();
+  }
+
+  getFailureCounter(): IModelFailureCounter {
+    return { nrFailures: 0, nrRetries: 0 };
   }
 
   /**
