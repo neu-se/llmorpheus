@@ -93,7 +93,7 @@ export class MutantGenerator {
     const subDirName =
       shortTemplateFileName +
       "_" +
-      this.model.getModelName() +
+      this.model.getModelName().replace('/','_') + // avoid slashes in directory names
       "_" +
       tempAsString;
     return subDirName;

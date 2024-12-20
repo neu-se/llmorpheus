@@ -1,4 +1,4 @@
-name: Mutation Testing Experiment
+name: Mutation Testing Experiment (OpenRouter)
 
 on:
   workflow_dispatch:
