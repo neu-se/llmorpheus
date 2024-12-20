@@ -193,7 +193,7 @@ jobs:
           echo "template is ${{ github.event.inputs.template }}"
           echo "MODELNAME is $MODELNAME"
           echo "temperature is ${{ github.event.inputs.temperature }}"
-          export MUTANTS_FILE=MUTATION_TESTING/${{ github.event.inputs.template }}_$MODELNAME_${{ github.event.inputs.temperature }}/mutants.json 
+          export MUTANTS_FILE="MUTATION_TESTING/${{ github.event.inputs.template }}_$MODELNAME_${{ github.event.inputs.temperature }}/mutants.json" 
           echo "MUTANTS_FILE is $MUTANTS_FILE"
           STRYKER_FILES=$(node ../llm-mutation-testing/.github/expandGlob.js $(pwd) "${{ matrix.package.files }}" "${{ matrix.package.ignore }}")
           STRYKER_OPTIONS="${{ needs.setup.outputs.strykerOptions }}"
