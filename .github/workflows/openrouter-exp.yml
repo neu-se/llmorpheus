@@ -1,4 +1,4 @@
-name: Mutation Testing Experiment
+name: Mutation Testing Experiment (OpenRouter)
 
 on:
   workflow_dispatch:
@@ -130,10 +130,6 @@ jobs:
           cd ${{ matrix.package.name }}
           git checkout ${{ matrix.package.sha }}
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
-
       - name: build project
         run: |
           cd ${{ matrix.package.name }}
@@ -183,12 +179,22 @@ jobs:
           name: mutants-${{ matrix.package.name }}
           path: ${{ matrix.package.name }}/${{ matrix.package.name }}
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+
       - name: install stryker-js into benchmark and run stryker (precomputed mutators)
         run: |
           cd ${{ matrix.package.name }}
           npm install install-local # install-local is needed to install our custom version of stryker-js  
           npx install-local ../stryker-js/packages/{core,util,api,instrumenter,*-runner}  --legacy-peer-deps
-          export MUTANTS_FILE=MUTATION_TESTING/${{ github.event.inputs.template }}_${{ github.event.inputs.model }}_${{ github.event.inputs.temperature }}/mutants.json 
+          # need to update modelname by replacing slash with underscore
+          export MODELNAME=$(echo ${{ github.event.inputs.model }} | sed 's/\//_/g')
+          echo "template is ${{ github.event.inputs.template }}"
+          echo "MODELNAME is $MODELNAME"
+          echo "temperature is ${{ github.event.inputs.temperature }}"
+          export MUTANTS_FILE="MUTATION_TESTING/${{ github.event.inputs.template }}_${MODELNAME}_${{ github.event.inputs.temperature }}/mutants.json" 
+          echo "MUTANTS_FILE is $MUTANTS_FILE"
           STRYKER_FILES=$(node ../llm-mutation-testing/.github/expandGlob.js $(pwd) "${{ matrix.package.files }}" "${{ matrix.package.ignore }}")
           STRYKER_OPTIONS="${{ needs.setup.outputs.strykerOptions }}"
           (time npx stryker run $STRYKER_OPTIONS --usePrecomputed  --mutate $STRYKER_FILES)  2>&1 | tee -a StrykerOutput.txt
@@ -251,8 +257,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-       
-
        # download all files mutants-*   
        - name: Download LLMorpheus results
          uses: actions/download-artifact@v4
