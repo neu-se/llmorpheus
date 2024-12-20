@@ -130,10 +130,6 @@ jobs:
           cd ${{ matrix.package.name }}
           git checkout ${{ matrix.package.sha }}
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
-
       - name: build project
         run: |
           cd ${{ matrix.package.name }}
@@ -182,6 +178,10 @@ jobs:
         with:
           name: mutants-${{ matrix.package.name }}
           path: ${{ matrix.package.name }}/${{ matrix.package.name }}
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
 
       - name: install stryker-js into benchmark and run stryker (precomputed mutators)
         run: |
@@ -253,8 +253,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-       
-
        # download all files mutants-*   
        - name: Download LLMorpheus results
          uses: actions/download-artifact@v4
