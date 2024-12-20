@@ -106,15 +106,20 @@ export class Model implements IModel {
     };
 
     performance.mark("llm-query-start");
-    let res;
+    let res: any;
     try {
       res = await retry(
         () =>
-          this.rateLimiter.next(() =>
-            axios.post(Model.LLMORPHEUS_LLM_API_ENDPOINT, body, {
+          this.rateLimiter.next(async () => {
+            const result = await axios.post(Model.LLMORPHEUS_LLM_API_ENDPOINT, body, {
               headers: Model.LLMORPHEUS_LLM_AUTH_HEADERS,
-            })
-          ),
+            });
+            // sometimes, we get a response with no prompt tokens. In such cases, throw an exception to force a retry
+            if (!result || !result.data.usage.prompt_tokens || result.data.usage.prompt_tokens === 0) {
+              throw new Error("invalid response: no prompt tokens");
+            } 
+            return result;
+          }),
         this.metaInfo.nrAttempts,
         () => {
           this.counter.nrRetries++;
