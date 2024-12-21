@@ -102,6 +102,11 @@ export class Model implements IModel {
         { role: "system", content: systemPrompt },
         { role: "user", content: prompt },
       ],
+      provider: {
+        order: [
+          "DeepInfra"
+        ]
+      },
       ...options,
     };
 
