@@ -104,7 +104,7 @@ export class Model implements IModel {
       ],
       provider: {
         order: [
-          "DeepInfra"
+          "Lepton"
         ]
       },
       ...options,
