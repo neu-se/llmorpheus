@@ -104,6 +104,7 @@ jobs:
           echo "package.edits=${{ matrix.package.edits }}"
           echo "package.files=${{ matrix.package.files }}"
           echo "package.ignore=${{ matrix.package.ignore }}"
+          echo "package.strykerOptions=${{ matrix.package.strykerOptions }}"
 
           # print the various options
           echo "temperature=${{ needs.setup.outputs.temperatures }}"
@@ -196,7 +197,15 @@ jobs:
           export MUTANTS_FILE="MUTATION_TESTING/${{ github.event.inputs.template }}_${MODELNAME}_${{ github.event.inputs.temperature }}/mutants.json" 
           echo "MUTANTS_FILE is $MUTANTS_FILE"
           STRYKER_FILES=$(node ../llm-mutation-testing/.github/expandGlob.js $(pwd) "${{ matrix.package.files }}" "${{ matrix.package.ignore }}")
-          STRYKER_OPTIONS="${{ needs.setup.outputs.strykerOptions }}"
+
+          # if "${{ matrix.package.strykerOptions }}" is not empty, use it; otherwise, use the default options
+          if [ -n "${{ matrix.package.strykerOptions }}" ]; then
+            STRYKER_OPTIONS="${{ matrix.package.strykerOptions }}"
+          else
+            STRYKER_OPTIONS="${{ needs.setup.outputs.strykerOptions }}"
+          fi
+          # STRYKER_OPTIONS="${{ needs.setup.outputs.strykerOptions }}"
+          echo "STRYKER_OPTIONS is $STRYKER_OPTIONS"
           (time npx stryker run $STRYKER_OPTIONS --usePrecomputed  --mutate $STRYKER_FILES)  2>&1 | tee -a StrykerOutput.txt
 
       - name: extract summary from StrykerOutput.txt
