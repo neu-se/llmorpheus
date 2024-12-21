@@ -204,7 +204,7 @@ jobs:
           else
             STRYKER_OPTIONS="${{ needs.setup.outputs.strykerOptions }}"
           fi
-          echo "STRYKER_OPTIONS is $STRYKER_OPTIONS"
+          echo "STRYKER_OPTIONS is ${STRYKER_OPTIONS}"
           (time npx stryker run $STRYKER_OPTIONS --usePrecomputed  --mutate $STRYKER_FILES)  2>&1 | tee -a StrykerOutput.txt
 
       - name: extract summary from StrykerOutput.txt
