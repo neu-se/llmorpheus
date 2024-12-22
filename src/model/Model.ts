@@ -7,7 +7,7 @@ import {
   RateLimiter,
 } from "../util/promise-utils";
 import { retry } from "../util/promise-utils";
-import { IModel, IModelFailureCounter } from "./IModel";
+import { IModel, IModelFailureCounter, PostOptionsType } from "./IModel";
 import { PostOptions, defaultPostOptions } from "./IModel";
 import { getEnv } from "../util/code-utils";
 import { IQueryResult } from "./IQueryResult";
@@ -22,6 +22,10 @@ export class Model implements IModel {
   );
   protected static LLMORPHEUS_LLM_AUTH_HEADERS = JSON.parse(
     getEnv("LLMORPHEUS_LLM_AUTH_HEADERS")
+  );
+
+  protected static LLMORPHEUS_LLM_PROVIDER = JSON.parse(
+    getEnv("LLMORPHEUS_LLM_PROVIDER")
   );
 
   protected instanceOptions: PostOptions;
@@ -96,7 +100,7 @@ export class Model implements IModel {
       `templates/${this.metaInfo.systemPrompt}`,
       "utf8"
     );
-    const body = {
+    let body = {
       model: this.getModelName(),
       messages: [
         { role: "system", content: systemPrompt },
@@ -104,6 +108,13 @@ export class Model implements IModel {
       ],
       ...options,
     };
+    if (Model.LLMORPHEUS_LLM_PROVIDER) {
+      const provider = Model.LLMORPHEUS_LLM_PROVIDER;
+      body = {
+        ...body,
+        provider: provider,
+      };
+    }
 
     performance.mark("llm-query-start");
     let res;
