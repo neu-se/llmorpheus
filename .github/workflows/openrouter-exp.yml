@@ -157,6 +157,7 @@ jobs:
         env:
           LLMORPHEUS_LLM_API_ENDPOINT: '${{ secrets.OPENROUTER_LLM_API_ENDPOINT }}'
           LLMORPHEUS_LLM_AUTH_HEADERS: '${{ secrets.OPENROUTER_LLM_AUTH_HEADERS }}'
+          LLMORPHEUS_LLM_PROVIDER: '${{ secrets.LLMORPHEUS_LLM_PROVIDER }}'
         run: |
           cd ${{ matrix.package.name }}
           BENCHMARK_DIR=`pwd`

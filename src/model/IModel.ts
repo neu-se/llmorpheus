@@ -20,14 +20,17 @@ export const defaultPostOptions = {
   top_p: 1, // no need to change this
 };
 
-export const defaultOpenAIPostoptions = {
-  ...defaultPostOptions,
-  n: 5,
-  stop: ["\n\n"], // list of tokens to stop at
-};
+export interface PostOptionsType {
+  max_tokens: number;
+  temperature: number;
+  top_p: number;
+  provider: {
+    order: string[];
+  };
+}
 
-export type PostOptions = Partial<typeof defaultPostOptions>;
-export type OpenAIPostOptions = Partial<typeof defaultOpenAIPostoptions>;
+
+export type PostOptions = Partial<PostOptionsType>;
 
 export interface IModelFailureCounter {
   nrRetries: number;
