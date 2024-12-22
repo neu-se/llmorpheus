@@ -112,7 +112,7 @@ export class Model implements IModel {
       const provider = Model.LLMORPHEUS_LLM_PROVIDER;
       body = {
         ...body,
-        provider: provider, 
+        provider: provider,
       };
     }
 

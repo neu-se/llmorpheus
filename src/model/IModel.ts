@@ -29,7 +29,6 @@ export interface PostOptionsType {
   };
 }
 
-
 export type PostOptions = Partial<PostOptionsType>;
 
 export interface IModelFailureCounter {
