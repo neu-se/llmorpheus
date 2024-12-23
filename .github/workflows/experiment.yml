@@ -22,7 +22,7 @@ on:
         options:
           - "gpt-4o-mini"
           - "gpt-3.5-turbo"
-          - "gpt-4-turbo"
+          - "gpt-4o"
         default: "gpt-4o-mini"
       # rateLimit:
       #     description: "number of milliseconds between requests sent to the LLM"
@@ -189,7 +189,9 @@ jobs:
           cd ${{ matrix.package.name }}
           npm install install-local # install-local is needed to install our custom version of stryker-js  
           npx install-local ../stryker-js/packages/{core,util,api,instrumenter,*-runner}  --legacy-peer-deps
-          export MUTANTS_FILE=MUTATION_TESTING/${{ github.event.inputs.template }}_${{ github.event.inputs.model }}_${{ github.event.inputs.temperature }}/mutants.json 
+          # replace slash with underscore in model name to avoid creating an invalid filename
+          export MODELNAME=$(echo ${{ github.event.inputs.model }} | sed 's/\//_/g')
+          export MUTANTS_FILE="MUTATION_TESTING/${{ github.event.inputs.template }}_${MODELNAME}_${{ github.event.inputs.temperature }}/mutants.json" 
           STRYKER_FILES=$(node ../llm-mutation-testing/.github/expandGlob.js $(pwd) "${{ matrix.package.files }}" "${{ matrix.package.ignore }}")
           STRYKER_OPTIONS="${{ needs.setup.outputs.strykerOptions }}"
           (time npx stryker run $STRYKER_OPTIONS --usePrecomputed  --mutate $STRYKER_FILES)  2>&1 | tee -a StrykerOutput.txt
