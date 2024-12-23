@@ -24,9 +24,16 @@ export class Model implements IModel {
     getEnv("LLMORPHEUS_LLM_AUTH_HEADERS")
   );
 
-  protected static LLMORPHEUS_LLM_PROVIDER = JSON.parse(
-    getEnv("LLMORPHEUS_LLM_PROVIDER", false)
-  );
+  protected static LLMORPHEUS_LLM_PROVIDER = Model.getLLMProvider();
+
+  private static getLLMProvider() {
+    const llmProvider = getEnv("LLMORPHEUS_LLM_PROVIDER", false);
+    if (llmProvider) {
+      return JSON.parse(llmProvider);
+    } else {
+      return null;
+    }
+  }
 
   protected instanceOptions: PostOptions;
   protected rateLimiter: RateLimiter;
