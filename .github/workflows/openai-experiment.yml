@@ -1,4 +1,4 @@
-name: Mutation Testing Experiment
+name: Mutation Testing Experiment (OpenAI)
 
 on:
   workflow_dispatch:
@@ -160,8 +160,8 @@ jobs:
 
       - name: Generate mutants
         env:
-          LLMORPHEUS_LLM_API_ENDPOINT: '${{ secrets.LLMORPHEUS_LLM_API_ENDPOINT }}'
-          LLMORPHEUS_LLM_AUTH_HEADERS: '${{ secrets.LLMORPHEUS_LLM_AUTH_HEADERS }}'
+          LLMORPHEUS_LLM_API_ENDPOINT: '${{ secrets.OPENAI_LLM_API_ENDPOINT }}'
+          LLMORPHEUS_LLM_AUTH_HEADERS: '${{ secrets.OPENAI_LLM_AUTH_HEADERS }}'
         run: |
           cd ${{ matrix.package.name }}
           BENCHMARK_DIR=`pwd`
