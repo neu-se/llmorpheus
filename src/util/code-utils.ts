@@ -141,9 +141,13 @@ export function prevPosition(code: string, line: number, column: number) {
   }
 }
 
-export function getEnv(name: string): string {
+/**
+ * Get the environment variable with the given name. If the variable is not set and enforce is true, the process will exit.
+ * (for optional variables, set enforce to false)
+ */
+export function getEnv(name: string, enforce: boolean = true): string {
   const value = process.env[name];
-  if (!value) {
+  if (!value && enforce) {
     console.error(`Please set the ${name} environment variable.`);
     process.exit(1);
   }

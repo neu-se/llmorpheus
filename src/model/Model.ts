@@ -25,7 +25,7 @@ export class Model implements IModel {
   );
 
   protected static LLMORPHEUS_LLM_PROVIDER = JSON.parse(
-    getEnv("LLMORPHEUS_LLM_PROVIDER")
+    getEnv("LLMORPHEUS_LLM_PROVIDER", false)
   );
 
   protected instanceOptions: PostOptions;
