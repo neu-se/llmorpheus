@@ -151,7 +151,7 @@ export function getEnv(name: string, enforce: boolean = true): string {
     console.error(`Please set the ${name} environment variable.`);
     process.exit(1);
   }
-  return value;
+  return value as string;
 }
 
 export function isDeclaration(compl: string): boolean {
