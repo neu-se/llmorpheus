@@ -1,6 +1,9 @@
 import fs from "fs";
 import path from "path";
-import { parse } from "yargs";
+
+function numberWithCommas(x: number): string {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 const projectNames = [
   "Complex.js",
@@ -117,7 +120,7 @@ export function generateVariabilityTable(
   runs: string[]
 ): string {
   let latexTable = `
-% table generated using command: "node benchmark/computeVariability.js ${baseDir} ${runs.join(
+% table generated using command: "node benchmark/generateVariabilityTable.js ${baseDir} ${runs.join(
     " "
   )}"
 \\begin{table}[hbt!]
@@ -137,9 +140,13 @@ export function generateVariabilityTable(
     );
     const commonMutants = findCommonMutants(baseDir, runs, projectName);
     const percentage = commonMutants.size / allMutantsSize;
-    latexTable += `${projectName} & ${minMutants} & ${maxMutants} & ${allMutantsSize} & ${
-      commonMutants.size
-    } (${(percentage * 100).toFixed(2)}\\%) \\\\ \n`;
+    latexTable += `${projectName} & ${numberWithCommas(
+      minMutants
+    )} & ${numberWithCommas(maxMutants)} & ${numberWithCommas(
+      allMutantsSize
+    )} & ${numberWithCommas(commonMutants.size)} (${(percentage * 100).toFixed(
+      2
+    )}\\%) \\\\ \n`;
   }
   const modelName = getModelName(baseDir, runs[0]);
   const temperature = getTemperature(baseDir, runs[0]);

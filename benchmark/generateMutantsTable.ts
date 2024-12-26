@@ -160,9 +160,19 @@ export function generateMutantsTable(dirName: string, runNr: number): string {
     const nrMutants = nrKilled + nrSurvived + nrTimedOut;
     const mutScore = jsonStrykerObj.mutationScore;
 
-    result += `\\textit{${projectName}} & ${nrPrompts} & \\ChangedText\{${numberWithCommas(nrCandidates)}\} & \\ChangedText\{${numberWithCommas(nrSyntacticallyInvalid)}\} & \\ChangedText\{${numberWithCommas(nrIdentical)}\} & \\ChangedText\{${numberWithCommas(nrDuplicate)}\} & ${numberWithCommas(nrMutants)} & ${numberWithCommas(nrKilled)} & ${numberWithCommas(nrSurvived)} & ${numberWithCommas(nrTimedOut)} & ${parseFloat(
-      mutScore
-    ).toFixed(2)} \\\\ \n`;
+    result += `\\textit{${projectName}} & ${nrPrompts} & \\ChangedText\{${numberWithCommas(
+      nrCandidates
+    )}\} & \\ChangedText\{${numberWithCommas(
+      nrSyntacticallyInvalid
+    )}\} & \\ChangedText\{${numberWithCommas(
+      nrIdentical
+    )}\} & \\ChangedText\{${numberWithCommas(
+      nrDuplicate
+    )}\} & ${numberWithCommas(nrMutants)} & ${numberWithCommas(
+      nrKilled
+    )} & ${numberWithCommas(nrSurvived)} & ${numberWithCommas(
+      nrTimedOut
+    )} & ${parseFloat(mutScore).toFixed(2)} \\\\ \n`;
 
     totalNrPrompts += nrPrompts;
     totalNrCandidates += nrCandidates;
@@ -175,7 +185,21 @@ export function generateMutantsTable(dirName: string, runNr: number): string {
     totalNrTimedOut += nrTimedOut;
   }
   result += `\\hline\n`;
-  result += `\\textit{Total} & ${numberWithCommas(totalNrPrompts)} & \\ChangedText\{${numberWithCommas(totalNrCandidates)}\} & \\ChangedText\{${numberWithCommas(totalNrSyntacticallyInvalid)}\} & \\ChangedText\{${numberWithCommas(totalNrIdentical)}\} & \\ChangedText\{${numberWithCommas(totalNrDuplicate)}\} & ${numberWithCommas(totalNrMutants)} & ${numberWithCommas(totalNrKilled)} & ${numberWithCommas(totalNrSurvived)} & ${numberWithCommas(totalNrTimedOut)} & --- \\\\ \n`;
+  result += `\\textit{Total} & ${numberWithCommas(
+    totalNrPrompts
+  )} & \\ChangedText\{${numberWithCommas(
+    totalNrCandidates
+  )}\} & \\ChangedText\{${numberWithCommas(
+    totalNrSyntacticallyInvalid
+  )}\} & \\ChangedText\{${numberWithCommas(
+    totalNrIdentical
+  )}\} & \\ChangedText\{${numberWithCommas(
+    totalNrDuplicate
+  )}\} & ${numberWithCommas(totalNrMutants)} & ${numberWithCommas(
+    totalNrKilled
+  )} & ${numberWithCommas(totalNrSurvived)} & ${numberWithCommas(
+    totalNrTimedOut
+  )} & --- \\\\ \n`;
   result += createTableFooter(dirName, runNr);
   return result;
 }

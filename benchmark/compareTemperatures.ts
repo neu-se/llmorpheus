@@ -46,14 +46,28 @@ function generateTable(baseDir: string, runs: string[]): void {
   //   \caption{the table}
   // \end{table*}
 
-  const runNrs = runs.map((path) => path.substring(path.lastIndexOf("run"), path.length).replace("run", "run \\#"));
+  const runNrs = runs.map((path) =>
+    path
+      .substring(path.lastIndexOf("run"), path.length)
+      .replace("run", "run \\#")
+  );
   let latexTable = `
-% This table was generated using command: "node benchmark/compareTemperatures.js ${baseDir} ${runs.join(" ")}
+% This table was generated using command: "node benchmark/compareTemperatures.js ${baseDir} ${runs.join(
+    " "
+  )}
 \\begin{table*}
 \\centering
 {\\scriptsize
 \\begin{tabular}{l||rrrr|rrrr|rrrr|rrrr}
-    & \\multicolumn{4}{|c|}{\\bf temp. 0.0 \\ChangedText{(${runNrs[0]})}} &  \\multicolumn{4}{|c|}{\\bf temp. 0.25 \\ChangedText{(${runNrs[1]})}} & \\multicolumn{4}{|c|}{\\bf temp. 0.50 \\ChangedText{(${runNrs[2]})}} &  \\multicolumn{4}{|c}{\\bf temp. 1.0 \\ChangedText{(${runNrs[3]})}} \\\\
+    & \\multicolumn{4}{|c|}{\\bf temp. 0.0 \\ChangedText{(${
+      runNrs[0]
+    })}} &  \\multicolumn{4}{|c|}{\\bf temp. 0.25 \\ChangedText{(${
+    runNrs[1]
+  })}} & \\multicolumn{4}{|c|}{\\bf temp. 0.50 \\ChangedText{(${
+    runNrs[2]
+  })}} &  \\multicolumn{4}{|c}{\\bf temp. 1.0 \\ChangedText{(${
+    runNrs[3]
+  })}} \\\\
     &  \\Total & \\Killed & \\Survived & \\Timeout
     &  \\Total & \\Killed & \\Survived & \\Timeout
     &  \\Total & \\Killed & \\Survived & \\Timeout
