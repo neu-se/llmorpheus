@@ -1,5 +1,4 @@
 import * as fs from "fs";
-import { unzip } from "zlib";
 
 /**
  * Create header of latex table as shown above.
@@ -80,14 +79,18 @@ function createTableFooter(dirName: string, runNr: number): string {
     Model: \\textit{${modelName}}, 
     temperature: ${temperature}, 
     maxTokens: ${maxTokens}, 
-    maxNrPrompts: ${maxNrPrompts}, 
     template: \\textit{${template}}, 
-    systemPrompt: \\textit{${systemPrompt}}, 
-    rateLimit: ${rateLimit}, 
-    nrAttempts: ${nrAttempts}. 
+    systemPrompt: \\textit{${systemPrompt}}. 
   }
   \\label{table:Mutants:run${runNr}:${modelName}:${template}:${temperature}}
 \\end{table*}`;
+}
+
+/**
+ * Use commas to separate thousands.
+ */
+function numberWithCommas(x: number): string {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 function unzipDirIfNeccessary(dirName: string) {
@@ -157,7 +160,7 @@ export function generateMutantsTable(dirName: string, runNr: number): string {
     const nrMutants = nrKilled + nrSurvived + nrTimedOut;
     const mutScore = jsonStrykerObj.mutationScore;
 
-    result += `\\textit{${projectName}} & ${nrPrompts} & \\ChangedText\{${nrCandidates}\} & \\ChangedText\{${nrSyntacticallyInvalid}\} & \\ChangedText\{${nrIdentical}\} & \\ChangedText\{${nrDuplicate}\} & ${nrMutants} & ${nrKilled} & ${nrSurvived} & ${nrTimedOut} & ${parseFloat(
+    result += `\\textit{${projectName}} & ${nrPrompts} & \\ChangedText\{${numberWithCommas(nrCandidates)}\} & \\ChangedText\{${numberWithCommas(nrSyntacticallyInvalid)}\} & \\ChangedText\{${numberWithCommas(nrIdentical)}\} & \\ChangedText\{${numberWithCommas(nrDuplicate)}\} & ${numberWithCommas(nrMutants)} & ${numberWithCommas(nrKilled)} & ${numberWithCommas(nrSurvived)} & ${numberWithCommas(nrTimedOut)} & ${parseFloat(
       mutScore
     ).toFixed(2)} \\\\ \n`;
 
@@ -172,14 +175,18 @@ export function generateMutantsTable(dirName: string, runNr: number): string {
     totalNrTimedOut += nrTimedOut;
   }
   result += `\\hline\n`;
-  result += `\\textit{Total} & ${totalNrPrompts} & \\ChangedText\{${totalNrCandidates}\} & \\ChangedText\{${totalNrSyntacticallyInvalid}\} & \\ChangedText\{${totalNrIdentical}\} & \\ChangedText\{${totalNrDuplicate}\} & ${totalNrMutants} & ${totalNrKilled} & ${totalNrSurvived} & ${totalNrTimedOut} & --- \\\\ \n`;
+  result += `\\textit{Total} & ${numberWithCommas(totalNrPrompts)} & \\ChangedText\{${numberWithCommas(totalNrCandidates)}\} & \\ChangedText\{${numberWithCommas(totalNrSyntacticallyInvalid)}\} & \\ChangedText\{${numberWithCommas(totalNrIdentical)}\} & \\ChangedText\{${numberWithCommas(totalNrDuplicate)}\} & ${numberWithCommas(totalNrMutants)} & ${numberWithCommas(totalNrKilled)} & ${numberWithCommas(totalNrSurvived)} & ${numberWithCommas(totalNrTimedOut)} & --- \\\\ \n`;
   result += createTableFooter(dirName, runNr);
   return result;
 }
 
 // to be executed from the command line only
 if (require.main === module) {
-  const dirName = process.argv[2]; // read dirName from command line
+  let dirName = process.argv[2]; // read dirName from command line
+  // remove trailing slash
+  if (dirName.endsWith("/")) {
+    dirName = dirName.substring(0, dirName.length - 1);
+  }
   const pathEntries = dirName.split("/");
   const lastEntry = pathEntries[pathEntries.length - 1];
   if (!lastEntry.startsWith("run")) {

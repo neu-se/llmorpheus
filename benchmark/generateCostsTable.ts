@@ -32,11 +32,8 @@ function createTableFooter(dirName: string, runNr: number): string {
     Model: \\textit{${modelName}}, 
     temperature: ${temperature}, 
     maxTokens: ${maxTokens}, 
-    maxNrPrompts: ${maxNrPrompts}, 
     template: \\textit{${template}}, 
-    systemPrompt: \\textit{${systemPrompt}}, 
-    rateLimit: ${rateLimit}, 
-    nrAttempts: ${nrAttempts}.  
+    systemPrompt: \\textit{${systemPrompt}}
   }
   \\label{table:Cost:run${runNr}:${modelName}:${template}:${temperature}}
 \\end{table*}`;
@@ -84,13 +81,14 @@ export function generateCostsTable(dirName: string, runNr: number): string {
 \\centering
 \{\\scriptsize
 \\begin{tabular}{l||r|r|r|r|r}
-\\multicolumn{1}{c|}{\\bf project} & \\multicolumn{2}{|c|}{\\bf time (sec)} & \\multicolumn{3}{|c|}{\\bf \\#tokens} \\\\
+\\multicolumn{1}{c|}{\\bf project} & \\multicolumn{2}{|c|}{\\bf time (sec)} & \\multicolumn{3}{|c}{\\bf \\#tokens} \\\\
                & {\\it LLMorpheus} & {\\it StrykerJS} & {\\bf prompt} & {\\bf compl.} & {\\bf total} \\\\
 \\hline
   `;
   for (const benchmarkName of results) {
     if (benchmarkName.startsWith(".")) continue;
     if (benchmarkName.endsWith(".zip")) continue;
+    if (benchmarkName.endsWith(".md")) continue;
     const file = fs.readFileSync(
       `${dirName}/${benchmarkName}/summary.json`,
       "utf8"
@@ -142,7 +140,11 @@ export function generateCostsTable(dirName: string, runNr: number): string {
 
 // to be executed from the command line only
 if (require.main === module) {
-  const dirName = process.argv[2]; // read dirName from command line
+  let dirName = process.argv[2]; // read dirName from command line
+  // remove trailing slash
+  if (dirName.endsWith("/")) {
+    dirName = dirName.substring(0, dirName.length - 1);
+  }
   const pathEntries = dirName.split("/");
   const lastEntry = pathEntries[pathEntries.length - 1];
   if (!lastEntry.startsWith("run")) {
