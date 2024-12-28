@@ -298,6 +298,14 @@ export class MutantGenerator {
    */
   private async generateMutantsFromPrompt(prompt: Prompt, mutants: Mutant[]) {
     try {
+      // if mutateOnly is set, only process prompts that contain the specified string
+      if (
+        this.metaInfo.mutateOnly &&
+        !prompt.getOrig().includes(this.metaInfo.mutateOnly)
+      ) {
+        return;
+      }
+
       const completions = await this.getCompletionsForPrompt(prompt);
       for (const completion of completions) {
         fs.writeFileSync(

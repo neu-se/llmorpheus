@@ -14,4 +14,5 @@ export interface MetaInfo {
   mutate: string;
   ignore: string;
   benchmark: boolean;
+  mutateOnly?: string;
 }

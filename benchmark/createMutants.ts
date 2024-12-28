@@ -104,6 +104,13 @@ if (require.main === module) {
           demandOption: false,
           description: "replay execution from specified directory",
         },
+        mutateOnly: {
+          type: "string",
+          default: undefined,
+          demandOption: false,
+          description:
+            "restrict mutation to code fragments containing this string",
+        },
       });
 
     const argv = await parser.argv;
@@ -130,6 +137,7 @@ if (require.main === module) {
         mutate: argv.mutate,
         ignore: argv.ignore,
         benchmark: argv.benchmark,
+        mutateOnly: argv.mutateOnly,
       };
 
       const baseModel = new Model(
