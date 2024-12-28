@@ -15,4 +15,5 @@ export interface MetaInfo {
   ignore: string;
   benchmark: boolean;
   mutateOnly?: string;
+  mutateOnlyLines?: number[];
 }

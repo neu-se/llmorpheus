@@ -294,15 +294,36 @@ export class MutantGenerator {
   }
 
   /**
+   * Check if a prompt should be skipped based on the mutateOnly and mutateOnlyLines options.
+   */
+  private checkIfPromptShouldbeSkipped(prompt: Prompt): boolean {
+    if (!this.metaInfo.mutateOnly) {
+      return false;
+    }
+    if (prompt.getOrig().includes(this.metaInfo.mutateOnly)) {
+      if (!this.metaInfo.mutateOnlyLines) {
+        return false;
+      } else {
+        const origStartLine = prompt.spec.location.startLine;
+        const origEndLine = prompt.spec.location.endLine;
+        const isInRange = this.metaInfo.mutateOnlyLines.some(
+          (line) => line >= origStartLine && line <= origEndLine
+        );
+        console.log(`origStartLine: ${origStartLine}, origEndLine: ${origEndLine}, 
+                     mutateOnlyLines: ${this.metaInfo.mutateOnlyLines}, isInRange: ${isInRange}`);
+        return !isInRange;
+      }
+    } else {
+      return true;
+    }
+  }
+
+  /**
    * Generate mutants from a specific prompt.
    */
   private async generateMutantsFromPrompt(prompt: Prompt, mutants: Mutant[]) {
     try {
-      // if mutateOnly is set, only process prompts that contain the specified string
-      if (
-        this.metaInfo.mutateOnly &&
-        !prompt.getOrig().includes(this.metaInfo.mutateOnly)
-      ) {
+      if (this.checkIfPromptShouldbeSkipped(prompt)) {
         return;
       }
 

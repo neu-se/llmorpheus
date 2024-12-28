@@ -111,6 +111,13 @@ if (require.main === module) {
           description:
             "restrict mutation to code fragments containing this string",
         },
+        mutateOnlyLines: {
+          type: "string",
+          default: undefined,
+          demandOption: false,
+          description:
+            "restrict mutation to specific lines in the code (requires mutateOnly) (e.g., 1,3,5)",
+        },
       });
 
     const argv = await parser.argv;
@@ -125,6 +132,10 @@ if (require.main === module) {
       metaInfo.mutate = argv.mutate;
       metaInfo.ignore = argv.ignore;
     } else {
+      const lines: number[] | undefined =
+        argv.mutateOnlyLines !== undefined
+          ? argv.mutateOnlyLines.split(",").map((x) => parseInt(x))
+          : undefined;
       metaInfo = {
         modelName: argv.model,
         temperature: argv.temperature,
@@ -138,6 +149,7 @@ if (require.main === module) {
         ignore: argv.ignore,
         benchmark: argv.benchmark,
         mutateOnly: argv.mutateOnly,
+        mutateOnlyLines: lines,
       };
 
       const baseModel = new Model(
