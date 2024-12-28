@@ -296,7 +296,7 @@ export class MutantGenerator {
   /**
    * Check if a prompt should be skipped based on the mutateOnly and mutateOnlyLines options.
    */
-  private checkIfPromptShouldbeSkipped(prompt: Prompt): boolean {
+  private checkIfPromptShouldBeSkipped(prompt: Prompt): boolean {
     if (!this.metaInfo.mutateOnly) {
       return false;
     }
@@ -309,8 +309,6 @@ export class MutantGenerator {
         const isInRange = this.metaInfo.mutateOnlyLines.some(
           (line) => line >= origStartLine && line <= origEndLine
         );
-        console.log(`origStartLine: ${origStartLine}, origEndLine: ${origEndLine}, 
-                     mutateOnlyLines: ${this.metaInfo.mutateOnlyLines}, isInRange: ${isInRange}`);
         return !isInRange;
       }
     } else {
@@ -323,7 +321,7 @@ export class MutantGenerator {
    */
   private async generateMutantsFromPrompt(prompt: Prompt, mutants: Mutant[]) {
     try {
-      if (this.checkIfPromptShouldbeSkipped(prompt)) {
+      if (this.checkIfPromptShouldBeSkipped(prompt)) {
         return;
       }
 
