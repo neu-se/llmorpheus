@@ -129,7 +129,7 @@ jobs:
           cp StrykerOutput.txt results/results-${{ matrix.package.name }}/StrykerOutput.txt
           cp StrykerInfo.json results/results-${{ matrix.package.name }}/StrykerInfo.json
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: results-${{ matrix.package.name }}
           path: ${{ matrix.package.name }}/results
@@ -163,7 +163,7 @@ jobs:
           cd ../..
       
       - name: Upload combined output files
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: results
           path: results/results
@@ -206,7 +206,7 @@ jobs:
            more report.md > $GITHUB_STEP_SUMMARY
 
        - name: Upload report
-         uses: actions/upload-artifact@v2
+         uses: actions/upload-artifact@v4
          with:
            name: report.md
            path: llm-mutation-testing/report.md
@@ -217,7 +217,7 @@ jobs:
            node .github/generateStrykerJSTable.js "$title" ../results > table.tex        
   
        - name: Upload table
-         uses: actions/upload-artifact@v2
+         uses: actions/upload-artifact@v4
          with:
            name: table.tex
            path: llm-mutation-testing/table.tex
