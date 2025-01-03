@@ -129,7 +129,7 @@ jobs:
           cp StrykerOutput.txt results/results-${{ matrix.package.name }}/StrykerOutput.txt
           cp StrykerInfo.json results/results-${{ matrix.package.name }}/StrykerInfo.json
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: results-${{ matrix.package.name }}
           path: ${{ matrix.package.name }}/results
