@@ -298,7 +298,16 @@ export class MutantGenerator {
    */
   private checkIfPromptShouldBeSkipped(prompt: Prompt): boolean {
     if (!this.metaInfo.mutateOnly) {
-      return false;
+      if (!this.metaInfo.mutateOnlyLines) {
+        return false;
+      } else {
+        const origStartLine = prompt.spec.location.startLine;
+        const origEndLine = prompt.spec.location.endLine;
+        const isInRange = this.metaInfo.mutateOnlyLines.some(
+          (line) => line >= origStartLine && line <= origEndLine
+        );
+        return !isInRange;
+      }
     }
     if (prompt.getOrig().includes(this.metaInfo.mutateOnly)) {
       if (!this.metaInfo.mutateOnlyLines) {
