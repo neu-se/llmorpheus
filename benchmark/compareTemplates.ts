@@ -58,33 +58,62 @@ function computeTotals(baseDir: string, run: string) {
 }
 
 /**
+ * Use commas to separate thousands.
+ */
+function numberWithCommas(x: number): string {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function unzipDirIfNeccessary(dirName: string) {
+  const results = fs.readdirSync(dirName);
+  if (!results.includes("delta")) {
+    // unzip "mutants.zip" and "results.zip" in dirName
+    for (const zipFile of ["mutants.zip", "results.zip"]) {
+      // execute shell command to unzip
+      const execSync = require("child_process").execSync;
+      execSync(`unzip ${dirName}/zip/${zipFile} -d ${dirName}`, {
+        stdio: "inherit",
+      });
+    }
+  }
+}
+
+/**
  * Generate a LaTeX table that shows the number of mutants generated
  * using different templates.
  */
 function generateTable(baseDir: string, runs: string[]): void {
-  let latexTable =
-    `% This table was generated using the following command:\n` +
-    `% node benchmark/compareTemplates.js ${baseDir.substring(
-      baseDir.indexOf("mutation-testing-data")
-    )} ${runs.join(" ")}\n` +
-    "\\begin{table*}\n" +
-    "\\centering\n" +
-    "{\\scriptsize\n" +
-    "\\begin{tabular}{l||rrrr|rrrr|rrrr|rrrr|rrrr|rrrr}\n" +
-    "        & \\multicolumn{4}{|c|}{\\bf full}                     &  \\multicolumn{4}{|c|}{\\bf onemutation} &   \\multicolumn{4}{|c|}{\\bf noexplanation} &  \\multicolumn{4}{|c}{\\bf noinstructions} &  \\multicolumn{4}{|c}{\\bf genericsystemprompt} &  \\multicolumn{4}{|c}{\\bf basic} \\\\\n" +
-    "                      &  \\Total & \\Killed & \\Survived & \\Timeout\n" +
-    "                      &  \\Total & \\Killed & \\Survived & \\Timeout\n" +
-    "                      &  \\Total & \\Killed & \\Survived & \\Timeout\n" +
-    "                      &  \\Total & \\Killed & \\Survived & \\Timeout\n" +
-    "                      &  \\Total & \\Killed & \\Survived & \\Timeout\n" +
-    "                      &  \\Total & \\Killed & \\Survived & \\Timeout  \\\\\n" +
-    "\\hline\n" +
-    "\\hline\n";
+  for (const run of runs) {
+    unzipDirIfNeccessary(path.join(baseDir, run));
+  }
+
+  let latexTable = `
+% This table was generated using the following command:
+% node benchmark/compareTemplates.js ${baseDir.substring(baseDir.indexOf("mutation-testing-data"))} ${runs.join(" ")}
+\\begin{table*}
+\\centering
+{\\scriptsize
+\\begin{tabular}{l@{\\hspace*{0.5mm}}||r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}|%
+  r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}|%
+  r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}|%
+  r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}|%
+  r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}|%
+   @{\\hspace*{1mm}}r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}r%
+}
+  & \\multicolumn{4}{|c|}{\\bf full} &  \\multicolumn{4}{|c|}{\\bf onemutation} &   \\multicolumn{4}{|c|}{\\bf noexplanation} &  \\multicolumn{4}{|c}{\\bf noinstructions} &  \\multicolumn{4}{|c}{\\bf genericsystemprompt} &  \\multicolumn{4}{@{\\hspace*{-1.05mm}}|c}{\\bf basic} \\\\
+  &  \\Total & \\Killed & \\Survived & \\Timeout
+  &  \\Total & \\Killed & \\Survived & \\Timeout
+  &  \\Total & \\Killed & \\Survived & \\Timeout
+  &  \\Total & \\Killed & \\Survived & \\Timeout
+  &  \\Total & \\Killed & \\Survived & \\Timeout
+  &  \\Total & \\Killed & \\Survived & \\Timeout  \\\\
+  \\hline
+  \\hline`;
   for (const projectName of projectNames) {
-    let row = "\\textit{" + projectName + "}";
+    let row = `\\begin{minipage}[t]{1.2cm}${projectName}\\end{minipage}`;
     for (const run of runs) {
       const data = fs.readFileSync(
-        path.join(baseDir, run, "projects", projectName, "StrykerInfo.json"),
+        path.join(baseDir, run, projectName, "StrykerInfo.json"),
         "utf8"
       );
       const info = JSON.parse(data);
@@ -95,13 +124,13 @@ function generateTable(baseDir: string, runs: string[]): void {
         parseInt(nrKilled) + parseInt(nrSurvived) + parseInt(nrTimedout);
       row +=
         " & " +
-        total +
+        numberWithCommas(total) +
         " & " +
-        nrKilled +
+        numberWithCommas(nrKilled) +
         " & " +
-        nrSurvived +
+        numberWithCommas(nrSurvived) +
         " & " +
-        nrTimedout;
+        numberWithCommas(nrTimedout);
     }
     row += " \\\\\n";
     latexTable += row;
@@ -113,13 +142,13 @@ function generateTable(baseDir: string, runs: string[]): void {
       computeTotals(baseDir, run);
     row +=
       " & " +
-      totalMutants +
+      numberWithCommas(totalMutants) +
       " & " +
-      totalKilled +
+      numberWithCommas(totalKilled) +
       " & " +
-      totalSurvived +
+      numberWithCommas(totalSurvived) +
       " & " +
-      totalTimedout;
+      numberWithCommas(totalTimedout);
   }
   row += " \\\\\n";
   latexTable += row;
