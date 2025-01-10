@@ -87,6 +87,13 @@ function generateTable(baseDir: string, runs: string[]): void {
     unzipDirIfNeccessary(path.join(baseDir, run));
   }
 
+  const fullRunNr = runs[0].substring(runs[0].indexOf("run")).replace("run", "run \\#");
+  const oneMutationRunNr = runs[1].substring(runs[1].indexOf("run")).replace("run", "run \\#");
+  const noExplanationRunNr = runs[2].substring(runs[2].indexOf("run")).replace("run", "run \\#");
+  const noInstructionsRunNr = runs[3].substring(runs[3].indexOf("run")).replace("run", "run \\#");
+  const genericSystemPromptRunNr = runs[4].substring(runs[4].indexOf("run")).replace("run", "run \\#");
+  const basicRunNr = runs[5].substring(runs[5].indexOf("run")).replace("run", "run \\#");
+
   let latexTable = `
 % This table was generated using the following command:
 % node benchmark/compareTemplates.js ${baseDir.substring(baseDir.indexOf("mutation-testing-data"))} ${runs.join(" ")}
@@ -101,6 +108,7 @@ function generateTable(baseDir: string, runs: string[]): void {
    @{\\hspace*{1mm}}r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}r@{\\hspace*{1mm}}r%
 }
   & \\multicolumn{4}{|c|}{\\bf full} &  \\multicolumn{4}{|c|}{\\bf onemutation} &   \\multicolumn{4}{|c|}{\\bf noexplanation} &  \\multicolumn{4}{|c}{\\bf noinstructions} &  \\multicolumn{4}{|c}{\\bf genericsystemprompt} &  \\multicolumn{4}{@{\\hspace*{-1.05mm}}|c}{\\bf basic} \\\\
+  & \\multicolumn{4}{|c|}{\\ChangedText{(${fullRunNr})}} &  \\multicolumn{4}{|c|}{\\ChangedText{(${oneMutationRunNr})}} &   \\multicolumn{4}{|c|}{\\ChangedText{(${noExplanationRunNr})}} &  \\multicolumn{4}{|c}{\\ChangedText{(${noInstructionsRunNr})}} &  \\multicolumn{4}{|c}{\\ChangedText{(${genericSystemPromptRunNr})}} &  \\multicolumn{4}{@{\\hspace*{-1.05mm}}|c}{\\ChangedText{(${basicRunNr})}} \\\\
   &  \\Total & \\Killed & \\Survived & \\Timeout
   &  \\Total & \\Killed & \\Survived & \\Timeout
   &  \\Total & \\Killed & \\Survived & \\Timeout
@@ -157,7 +165,7 @@ function generateTable(baseDir: string, runs: string[]): void {
     "\\end{tabular}\n" +
     "}\n" +
     "\\caption{Number of mutants generated using the \\CodeLlamaThirtyFour LLM at temperature 0.0" +
-    ` using templates ${templates.join(", ")}.}\n` +
+    ` using templates ${templates.join(", ")} \\ChangedText{(showing one run of each)}.}\n` +
     "\\label{table:Templates}\n" +
     "\\end{table*}\n";
   console.log(latexTable);
