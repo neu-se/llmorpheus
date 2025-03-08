@@ -8,6 +8,7 @@ import { PromptSpec } from "../prompt/PromptSpec";
 import { SourceLocation } from "../util/SourceLocation";
 import { charAtPosition, nextPosition, prevPosition } from "../util/code-utils";
 import { Completion } from "../prompt/Completion";
+import { MetaInfo } from "./MetaInfo";
 
 /**
  * Generates a set of PromptSpecs for a given set of source files and a given prompt template.
@@ -17,15 +18,15 @@ export class PromptSpecGenerator {
   private promptSpecs = new Array<PromptSpec>();
   private prompts = new Array<Prompt>();
   private promptTemplate: string = fs.readFileSync(
-    this.promptTemplateFileName,
+    this.metaInfo.template,
     "utf8"
   );
   constructor(
     private readonly files: string[],
-    private readonly promptTemplateFileName: string,
     private readonly packagePath: string,
     private readonly outputDir: string,
-    private readonly subDir: string
+    private readonly subDir: string,
+    private readonly metaInfo: MetaInfo
   ) {
     Prompt.resetIdCounter();
     this.createPromptSpecs();
@@ -578,13 +579,15 @@ export class PromptSpecGenerator {
       fs.mkdirSync(dir);
     }
     for (const prompt of this.prompts) {
-      const fileName = path.join(
-        this.outputDir,
-        this.subDir,
-        "prompts",
-        `prompt${prompt.getId()}.txt`
-      );
-      fs.writeFileSync(fileName, prompt.getText());
+      if (!prompt.shouldBeSkipped(this.metaInfo)) {
+        const fileName = path.join(
+          this.outputDir,
+          this.subDir,
+          "prompts",
+          `prompt${prompt.getId()}.txt`
+        );
+        fs.writeFileSync(fileName, prompt.getText());
+      }
     }
   }
 }

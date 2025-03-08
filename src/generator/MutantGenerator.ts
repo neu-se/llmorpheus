@@ -273,18 +273,20 @@ export class MutantGenerator {
 
     const generator = new PromptSpecGenerator(
       files,
-      this.metaInfo.template,
       this.packagePath,
       this.outputDir,
-      this.getSubDirName()
+      this.getSubDirName(),
+      this.metaInfo
     );
     generator.writePromptFiles();
 
     const mutants = new Array<Mutant>();
     for (const prompt of generator.getPrompts()) {
-      this.printAndLog(
-        `processing prompt ${prompt.getId()}/${generator.getPrompts().length}\n`
-      );
+      if (!prompt.shouldBeSkipped(this.metaInfo)) {
+        this.printAndLog(
+          `processing prompt ${prompt.getId()}/${generator.getPrompts().length}\n`
+        );
+      }
       await this.generateMutantsFromPrompt(prompt, mutants);
       if (++this.promptCnt >= this.metaInfo.maxNrPrompts) {
         break;
@@ -294,43 +296,11 @@ export class MutantGenerator {
   }
 
   /**
-   * Check if a prompt should be skipped based on the mutateOnly and mutateOnlyLines options.
-   */
-  private checkIfPromptShouldBeSkipped(prompt: Prompt): boolean {
-    if (!this.metaInfo.mutateOnly) {
-      if (!this.metaInfo.mutateOnlyLines) {
-        return false;
-      } else {
-        const origStartLine = prompt.spec.location.startLine;
-        const origEndLine = prompt.spec.location.endLine;
-        const isInRange = this.metaInfo.mutateOnlyLines.some(
-          (line) => line >= origStartLine && line <= origEndLine
-        );
-        return !isInRange;
-      }
-    }
-    if (prompt.getOrig().includes(this.metaInfo.mutateOnly)) {
-      if (!this.metaInfo.mutateOnlyLines) {
-        return false;
-      } else {
-        const origStartLine = prompt.spec.location.startLine;
-        const origEndLine = prompt.spec.location.endLine;
-        const isInRange = this.metaInfo.mutateOnlyLines.some(
-          (line) => line >= origStartLine && line <= origEndLine
-        );
-        return !isInRange;
-      }
-    } else {
-      return true;
-    }
-  }
-
-  /**
    * Generate mutants from a specific prompt.
    */
   private async generateMutantsFromPrompt(prompt: Prompt, mutants: Mutant[]) {
     try {
-      if (this.checkIfPromptShouldBeSkipped(prompt)) {
+      if (prompt.shouldBeSkipped(this.metaInfo)) {
         return;
       }
 

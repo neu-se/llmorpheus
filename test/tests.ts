@@ -25,15 +25,28 @@ describe("test mutant generation", () => {
   });
 
   it("should generate the expected PromptSpecs for a given source file and prompt template", async () => {
+    const metaInfo: MetaInfo = {
+      modelName: modelName,
+      template: promptTemplateFileName,
+      systemPrompt: "",
+      maxTokens: 250,
+      temperature: 0,
+      maxNrPrompts: 100,
+      nrAttempts: 1,
+      mutate: "src/**/*.ts",
+      ignore: "**/*.spec.ts",
+      rateLimit: 1000,
+      benchmark: false,
+    };
     const files = [sorterSourceFileName];
     const outputDir = fs.mkdtempSync(path.join(".", "test-"));
     fs.mkdirSync(path.join(outputDir, subDirName));
     const promptSpecGenerator = new PromptSpecGenerator(
       files,
-      promptTemplateFileName,
       sorterTestFilePath,
       outputDir,
-      subDirName
+      subDirName,
+      metaInfo
     );
     const actualPromptSpecs = await promptSpecGenerator.getPromptSpecs();
     expect(actualPromptSpecs.length).to.equal(40);
@@ -56,15 +69,28 @@ describe("test mutant generation", () => {
   });
 
   it("should generate the expected prompts for a given source file and prompt template", async () => {
+    const metaInfo: MetaInfo = {
+      modelName: modelName,
+      template: promptTemplateFileName,
+      systemPrompt: "",
+      maxTokens: 250,
+      temperature: 0,
+      maxNrPrompts: 100,
+      nrAttempts: 1,
+      mutate: "src/**/*.ts",
+      ignore: "**/*.spec.ts",
+      rateLimit: 1000,
+      benchmark: false,
+    };
     const files = [sorterSourceFileName];
     const outputDir = fs.mkdtempSync(path.join(".", "test-"));
     fs.mkdirSync(path.join(outputDir, subDirName));
     const promptSpecGenerator = new PromptSpecGenerator(
       files,
-      promptTemplateFileName,
       sorterTestFilePath,
       outputDir,
-      subDirName
+      subDirName,
+      metaInfo
     );
     promptSpecGenerator.writePromptFiles();
     // check that actual and expected directories contain the same files
