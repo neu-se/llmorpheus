@@ -39,7 +39,7 @@ describe("test mutant generation", () => {
       benchmark: false,
       mutateOnly: undefined,
       mutateOnlyLines: undefined,
-      maxLinesInPlaceHolder: 1
+      maxLinesInPlaceHolder: 1,
     };
     const files = [sorterSourceFileName];
     const outputDir = fs.mkdtempSync(path.join(".", "test-"));
@@ -86,7 +86,7 @@ describe("test mutant generation", () => {
       benchmark: false,
       mutateOnly: undefined,
       mutateOnlyLines: undefined,
-      maxLinesInPlaceHolder: 1
+      maxLinesInPlaceHolder: 1,
     };
     const files = [sorterSourceFileName];
     const outputDir = fs.mkdtempSync(path.join(".", "test-"));
@@ -160,7 +160,7 @@ describe("test mutant generation", () => {
       benchmark: false,
       mutateOnly: undefined,
       mutateOnlyLines: undefined,
-      maxLinesInPlaceHolder: 1
+      maxLinesInPlaceHolder: 1,
     };
     const mutantGenerator = new MutantGenerator(
       model,
@@ -228,7 +228,7 @@ describe("test mutant generation", () => {
       benchmark: false,
       mutateOnly: undefined,
       mutateOnlyLines: undefined,
-      maxLinesInPlaceHolder: 1
+      maxLinesInPlaceHolder: 1,
     };
     const mutantGenerator = new MutantGenerator(
       model,
@@ -266,7 +266,7 @@ describe("test mutant generation", () => {
       benchmark: false,
       mutateOnly: undefined,
       mutateOnlyLines: undefined,
-      maxLinesInPlaceHolder: 1
+      maxLinesInPlaceHolder: 1,
     };
     const mutantGenerator = new MutantGenerator(
       model,
@@ -306,7 +306,7 @@ describe("test mutant generation", () => {
       benchmark: false,
       mutateOnly: undefined,
       mutateOnlyLines: undefined,
-      maxLinesInPlaceHolder: 1
+      maxLinesInPlaceHolder: 1,
     };
     const mutantGenerator = new MutantGenerator(
       model,
@@ -454,7 +454,7 @@ describe("test mutant generation", () => {
       benchmark: false,
       mutateOnly: undefined,
       mutateOnlyLines: [9],
-      maxLinesInPlaceHolder: 1
+      maxLinesInPlaceHolder: 1,
     };
     const mutantGenerator = new MutantGenerator(
       model,
@@ -472,7 +472,10 @@ describe("test mutant generation", () => {
       fs.readFileSync(path.join(filePath), "utf8")
     );
     const expectedSummaryJson: any = JSON.parse(
-      fs.readFileSync("./test/input/recorded/sorters/summary-line-9-only.json", "utf8")
+      fs.readFileSync(
+        "./test/input/recorded/sorters/summary-line-9-only.json",
+        "utf8"
+      )
     );
 
     // check that the summary file contains the right information. Note that we don't know
@@ -576,6 +579,161 @@ describe("test mutant generation", () => {
       );
       const expectedFileContents = fs.readFileSync(
         path.join(dirContainingRecording, "prompts", actualFileName),
+        "utf8"
+      );
+      expect(actualFileContents).to.equal(expectedFileContents);
+    }
+
+    fs.rmdirSync(outputDir, { recursive: true });
+  });
+
+  it('should apply mutations mutations only to lines containing "<"', async () => {
+    const dirContainingRecording = "./test/input/recorded/sorters/";
+    const model = new ReplayModel(dirContainingRecording);
+    const outputDir = fs.mkdtempSync(path.join(".", "test-"));
+    const metaInfo: MetaInfo = {
+      modelName: "codellama-34b-instruct",
+      template: "templates/template-full.hb",
+      systemPrompt: "SystemPrompt-MutationTestingExpert.txt",
+      maxTokens: 250,
+      temperature: 0,
+      maxNrPrompts: 1250,
+      nrAttempts: 3,
+      mutate: "src/**/TreeSorter.ts",
+      ignore: "**/*.spec.ts",
+      rateLimit: 0,
+      benchmark: false,
+      mutateOnly: "<",
+      mutateOnlyLines: undefined,
+      maxLinesInPlaceHolder: 1,
+    };
+    const mutantGenerator = new MutantGenerator(
+      model,
+      outputDir,
+      "test/input/testProject/sorters",
+      metaInfo
+    );
+    await mutantGenerator.generateMutants();
+    const filePath = path.join(
+      outputDir,
+      "template-full_codellama-34b-instruct_0.0",
+      "summary.json"
+    );
+    const actualSummaryJson: any = JSON.parse(
+      fs.readFileSync(path.join(filePath), "utf8")
+    );
+    const expectedSummaryJson: any = JSON.parse(
+      fs.readFileSync(
+        "./test/input/recorded/sorters/summary-lessthan-only.json",
+        "utf8"
+      )
+    );
+
+    // check that the summary file contains the right information. Note that we don't know
+    // the number of tokens used during replay, so we can't check that.
+    expect(actualSummaryJson.nrPrompts).to.equal(expectedSummaryJson.nrPrompts);
+    expect(actualSummaryJson.nrCandidates).to.equal(
+      expectedSummaryJson.nrCandidates
+    );
+    expect(actualSummaryJson.nrSyntacticallyValid).to.equal(
+      expectedSummaryJson.nrSyntacticallyValid
+    );
+    expect(actualSummaryJson.nrSyntacticallyInvalid).to.equal(
+      expectedSummaryJson.nrSyntacticallyInvalid
+    );
+    expect(actualSummaryJson.nrSemanticallyInvalid).to.equal(
+      expectedSummaryJson.nrSemanticallyInvalid
+    );
+    expect(actualSummaryJson.nrIdentical).to.equal(
+      expectedSummaryJson.nrIdentical
+    );
+    expect(actualSummaryJson.nrDuplicate).to.equal(
+      expectedSummaryJson.nrDuplicate
+    );
+    expect(actualSummaryJson.nrLocations).to.equal(
+      expectedSummaryJson.nrLocations
+    );
+
+    expect(actualSummaryJson.metaInfo.modelName).to.equal(
+      expectedSummaryJson.metaInfo.modelName
+    );
+    expect(actualSummaryJson.metaInfo.temperature).to.equal(
+      expectedSummaryJson.metaInfo.temperature
+    );
+    expect(actualSummaryJson.metaInfo.maxTokens).to.equal(
+      expectedSummaryJson.metaInfo.maxTokens
+    );
+    expect(actualSummaryJson.metaInfo.maxNrPrompts).to.equal(
+      expectedSummaryJson.metaInfo.maxNrPrompts
+    );
+    expect(actualSummaryJson.metaInfo.rateLimit).to.equal(
+      expectedSummaryJson.metaInfo.rateLimit
+    );
+    expect(actualSummaryJson.metaInfo.nrAttempts).to.equal(
+      expectedSummaryJson.metaInfo.nrAttempts
+    );
+    expect(actualSummaryJson.metaInfo.template).to.equal(
+      expectedSummaryJson.metaInfo.template
+    );
+    expect(actualSummaryJson.metaInfo.systemPrompt).to.equal(
+      expectedSummaryJson.metaInfo.systemPrompt
+    );
+    expect(actualSummaryJson.metaInfo.mutate).to.equal(
+      expectedSummaryJson.metaInfo.mutate
+    );
+    expect(actualSummaryJson.metaInfo.ignore).to.equal(
+      expectedSummaryJson.metaInfo.ignore
+    );
+    expect(actualSummaryJson.metaInfo.benchmark).to.equal(
+      expectedSummaryJson.metaInfo.benchmark
+    );
+
+    // now check that the actual prompt and completion files are the same as the expected ones
+    const actualFiles = fs.readdirSync(
+      path.join(
+        outputDir,
+        "template-full_codellama-34b-instruct_0.0",
+        "prompts"
+      )
+    );
+    const expectedFiles = fs.readdirSync(
+      path.join(dirContainingRecording, "prompts-lessthan-only")
+    );
+    expect(actualFiles.length).to.equal(expectedFiles.length);
+
+    // check that the same prompt and completion files are in both directories
+    const inActualButNotInExpected = actualFiles.filter(
+      (fileName) => !expectedFiles.includes(fileName)
+    );
+    expect(
+      inActualButNotInExpected,
+      `expected ${inActualButNotInExpected.join(",")} to be empty`
+    ).to.be.empty;
+    const inExpectedButNotInActual = expectedFiles.filter(
+      (fileName) => !actualFiles.includes(fileName)
+    );
+    expect(
+      inExpectedButNotInActual,
+      `expected ${inExpectedButNotInActual.join(",")} to be empty`
+    ).to.be.empty;
+
+    // check that the file contents match
+    for (const actualFileName of actualFiles) {
+      const actualFileContents = fs.readFileSync(
+        path.join(
+          outputDir,
+          "template-full_codellama-34b-instruct_0.0",
+          "prompts",
+          actualFileName
+        ),
+        "utf8"
+      );
+      const expectedFileContents = fs.readFileSync(
+        path.join(
+          dirContainingRecording,
+          "prompts-lessthan-only",
+          actualFileName
+        ),
         "utf8"
       );
       expect(actualFileContents).to.equal(expectedFileContents);

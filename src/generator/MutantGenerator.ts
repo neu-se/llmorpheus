@@ -170,7 +170,8 @@ export class MutantGenerator {
       substitution.includes("await") ||
       substitution.includes("let") ||
       substitution.includes("//") ||
-      (prompt.getOrig().includes("...") && this.metaInfo.maxLinesInPlaceHolder === 1) ||
+      (prompt.getOrig().includes("...") &&
+        this.metaInfo.maxLinesInPlaceHolder === 1) ||
       prompt.getOrig().includes("process") ||
       (substitution.includes(";") && prompt.spec.component === "allArgs") ||
       (!isDeclaration(substitution) &&
@@ -284,7 +285,9 @@ export class MutantGenerator {
     for (const prompt of generator.getPrompts()) {
       if (!prompt.shouldBeSkipped(this.metaInfo)) {
         this.printAndLog(
-          `processing prompt ${prompt.getId()}/${generator.getPrompts().length}\n`
+          `processing prompt ${prompt.getId()}/${
+            generator.getPrompts().length
+          }\n`
         );
       }
       await this.generateMutantsFromPrompt(prompt, mutants);

@@ -52,9 +52,12 @@ export class PromptSpecGenerator {
   private createPrompts() {
     for (const promptSpec of this.promptSpecs) {
       let codeWithPlaceholder = promptSpec.getCodeWithPlaceholder();
-      // remove whitespace between "(" and "<PLACEHOLDER>" and 
+      // remove whitespace between "(" and "<PLACEHOLDER>" and
       // between "<PLACEHOLDER>" and ")"
-      codeWithPlaceholder = codeWithPlaceholder.replace(/\(\s*<PLACEHOLDER>\s*\)/g, "(<PLACEHOLDER>)");
+      codeWithPlaceholder = codeWithPlaceholder.replace(
+        /\(\s*<PLACEHOLDER>\s*\)/g,
+        "(<PLACEHOLDER>)"
+      );
       const nrLines = codeWithPlaceholder.split("\n").length;
       if (nrLines > 200) {
         const lineWherePlaceHolderIs = codeWithPlaceholder
@@ -452,7 +455,8 @@ export class PromptSpecGenerator {
   private createPromptSpecsForCall(file: string, path: any) {
     if (
       path.isCallExpression() &&
-      path.node.loc!.end.line - path.node.loc!.start.line <= this.metaInfo.maxLinesInPlaceHolder
+      path.node.loc!.end.line - path.node.loc!.start.line <=
+        this.metaInfo.maxLinesInPlaceHolder
     ) {
       // for now, restrict to calls on a single line
       const callee = path.node.callee;
