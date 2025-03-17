@@ -1,0 +1,21 @@
+*** Using meta-llama/llama-3.3-70b-instruct with no rate limit and 3 attempts
+*** Generating mutants for src/runtime/api.js in /Users/franktip/git/mutation-testing-data/casestudy/css-loader-1261/css-loader/
+Starting generation of mutants on: Sun, 16 Mar 2025 02:00:13 GMT
+
+
+found 1 files to mutate
+generating mutants for the following files: src/runtime/api.js
+
+found 0 mutant candidates
+
+discarding 0 syntactically invalid mutants
+
+discarding 0 mutant candidates that are identical to the original code
+
+discarding 0 duplicate mutants
+
+nrRetries = 0, nrFailures = 0
+summary written to  /Users/franktip/git/mutation-testing-data/casestudy/css-loader-1261/css-loader/MUTATION_TESTING/template-full_meta-llama_llama-3.3-70b-instruct_0.0/summary.json
+
+wrote 0 mutants in 0 locations to /Users/franktip/git/mutation-testing-data/casestudy/css-loader-1261/css-loader/MUTATION_TESTING/template-full_meta-llama_llama-3.3-70b-instruct_0.0/mutants.json
+

@@ -14,4 +14,7 @@ export interface MetaInfo {
   mutate: string;
   ignore: string;
   benchmark: boolean;
+  mutateOnly: string | undefined;
+  mutateOnlyLines: number[] | undefined;
+  maxLinesInPlaceHolder: number;
 }

@@ -17,7 +17,6 @@ export class ReplayModel implements IModel {
     const summaryInfo = JSON.parse(fs.readFileSync(summaryFileName, "utf8"));
     this.metaInfo = summaryInfo.metaInfo;
     console.log(`*** replaying execution from directory ${this.dirName}`);
-    console.log(`*** metaInfo: ${JSON.stringify(summaryInfo.metaInfo)}`);
     this.initializeMap();
   }
 

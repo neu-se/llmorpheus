@@ -104,6 +104,27 @@ if (require.main === module) {
           demandOption: false,
           description: "replay execution from specified directory",
         },
+        mutateOnly: {
+          type: "string",
+          default: undefined,
+          demandOption: false,
+          description:
+            "restrict mutation to code fragments containing this string",
+        },
+        mutateOnlyLines: {
+          type: "string",
+          default: undefined,
+          demandOption: false,
+          description:
+            "restrict mutation to specific lines in the code (requires mutateOnly) (e.g., 1,3,5)",
+        },
+        maxLinesInPlaceHolder: {
+          type: "number",
+          default: 1,
+          demandOption: false,
+          description:
+            "number of lines that can be covered by a placeholder (default: 1)",
+        },
       });
 
     const argv = await parser.argv;
@@ -118,6 +139,10 @@ if (require.main === module) {
       metaInfo.mutate = argv.mutate;
       metaInfo.ignore = argv.ignore;
     } else {
+      const lines: number[] | undefined =
+        argv.mutateOnlyLines !== undefined
+          ? argv.mutateOnlyLines.split(",").map((x) => parseInt(x))
+          : undefined;
       metaInfo = {
         modelName: argv.model,
         temperature: argv.temperature,
@@ -130,6 +155,9 @@ if (require.main === module) {
         mutate: argv.mutate,
         ignore: argv.ignore,
         benchmark: argv.benchmark,
+        mutateOnly: argv.mutateOnly,
+        mutateOnlyLines: lines,
+        maxLinesInPlaceHolder: argv.maxLinesInPlaceHolder,
       };
 
       const baseModel = new Model(

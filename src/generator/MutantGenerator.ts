@@ -170,7 +170,8 @@ export class MutantGenerator {
       substitution.includes("await") ||
       substitution.includes("let") ||
       substitution.includes("//") ||
-      prompt.getOrig().includes("...") ||
+      (prompt.getOrig().includes("...") &&
+        this.metaInfo.maxLinesInPlaceHolder === 1) ||
       prompt.getOrig().includes("process") ||
       (substitution.includes(";") && prompt.spec.component === "allArgs") ||
       (!isDeclaration(substitution) &&
@@ -273,18 +274,22 @@ export class MutantGenerator {
 
     const generator = new PromptSpecGenerator(
       files,
-      this.metaInfo.template,
       this.packagePath,
       this.outputDir,
-      this.getSubDirName()
+      this.getSubDirName(),
+      this.metaInfo
     );
     generator.writePromptFiles();
 
     const mutants = new Array<Mutant>();
     for (const prompt of generator.getPrompts()) {
-      this.printAndLog(
-        `processing prompt ${prompt.getId()}/${generator.getPrompts().length}\n`
-      );
+      if (!prompt.shouldBeSkipped(this.metaInfo)) {
+        this.printAndLog(
+          `processing prompt ${prompt.getId()}/${
+            generator.getPrompts().length
+          }\n`
+        );
+      }
       await this.generateMutantsFromPrompt(prompt, mutants);
       if (++this.promptCnt >= this.metaInfo.maxNrPrompts) {
         break;
@@ -298,6 +303,10 @@ export class MutantGenerator {
    */
   private async generateMutantsFromPrompt(prompt: Prompt, mutants: Mutant[]) {
     try {
+      if (prompt.shouldBeSkipped(this.metaInfo)) {
+        return;
+      }
+
       const completions = await this.getCompletionsForPrompt(prompt);
       for (const completion of completions) {
         fs.writeFileSync(
@@ -316,7 +325,7 @@ export class MutantGenerator {
           if (substitution === prompt.getOrig()) {
             this.mutationStats.nrIdentical++;
           } else if (
-            prompt.getOrig().includes("Object.") ||
+            // prompt.getOrig().includes("Object.") ||
             this.isInvalidSubstitution(prompt, substitution) ||
             (isDeclaration(prompt.getOrig()) && !isDeclaration(substitution))
           ) {
@@ -476,7 +485,6 @@ export class MutantGenerator {
         this.mutationStats.nrDuplicate++;
       }
     } catch (e) {
-      // console.log(`*** invalid mutant: ${substitution} replacing ${prompt.getOrig()}\n`);
       this.mutationStats.nrSyntacticallyInvalid++;
     }
   }
@@ -563,7 +571,6 @@ export class MutantGenerator {
         this.mutationStats.nrDuplicate++;
       }
     } catch (e) {
-      // console.log(`*** invalid mutant: ${substitution} replacing ${prompt.getOrig()}\n`);
       this.mutationStats.nrSyntacticallyInvalid++;
     }
   }
