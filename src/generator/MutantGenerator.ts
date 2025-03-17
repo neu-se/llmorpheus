@@ -170,7 +170,7 @@ export class MutantGenerator {
       substitution.includes("await") ||
       substitution.includes("let") ||
       substitution.includes("//") ||
-      prompt.getOrig().includes("...") ||
+      (prompt.getOrig().includes("...") && this.metaInfo.maxLinesInPlaceHolder === 1) ||
       prompt.getOrig().includes("process") ||
       (substitution.includes(";") && prompt.spec.component === "allArgs") ||
       (!isDeclaration(substitution) &&
@@ -322,7 +322,7 @@ export class MutantGenerator {
           if (substitution === prompt.getOrig()) {
             this.mutationStats.nrIdentical++;
           } else if (
-            prompt.getOrig().includes("Object.") ||
+            // prompt.getOrig().includes("Object.") ||
             this.isInvalidSubstitution(prompt, substitution) ||
             (isDeclaration(prompt.getOrig()) && !isDeclaration(substitution))
           ) {
@@ -482,7 +482,6 @@ export class MutantGenerator {
         this.mutationStats.nrDuplicate++;
       }
     } catch (e) {
-      // console.log(`*** invalid mutant: ${substitution} replacing ${prompt.getOrig()}\n`);
       this.mutationStats.nrSyntacticallyInvalid++;
     }
   }
@@ -569,7 +568,6 @@ export class MutantGenerator {
         this.mutationStats.nrDuplicate++;
       }
     } catch (e) {
-      // console.log(`*** invalid mutant: ${substitution} replacing ${prompt.getOrig()}\n`);
       this.mutationStats.nrSyntacticallyInvalid++;
     }
   }

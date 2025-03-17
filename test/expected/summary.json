@@ -20,7 +20,8 @@
     "mutate": "src/**/TreeSorter.js",
     "ignore": "src/**/*.spec.ts",
     "rateLimit": 1000,
-    "benchmark": false
+    "benchmark": false,
+    "maxLinesInPlaceHolder": 1
   },
   "nrRetries": 0,
   "nrFailures": 0

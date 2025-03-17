@@ -1,0 +1,19 @@
+  Option 1: The PLACEHOLDER can be replaced with:
+```
+'*** creating TreeSorter ***' + 1
+```
+This would result in different behavior because the `+ 1` operator would add 1 to the string, resulting in `'*** creating TreeSorter ***1'`.
+
+Option 2: The PLACEHOLDER can be replaced with:
+```
+'*** creating TreeSorter ***' + '1'
+```
+This would result in different behavior because the `+ '1'` operator would concatenate the string with the string `'1'`, resulting in `'*** creating TreeSorter ***1'`.
+
+Option 3: The PLACEHOLDER can be replaced with:
+```
+'*** creating TreeSorter ***' + 1 + '1'
+```
+This would result in different behavior because the `+ 1` operator would add 1 to the string, and then the `+ '1'` operator would concatenate the result with the string `'1'`, resulting in `'*** creating TreeSorter ***11'`.
+
+DONE.

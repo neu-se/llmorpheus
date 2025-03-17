@@ -118,6 +118,13 @@ if (require.main === module) {
           description:
             "restrict mutation to specific lines in the code (requires mutateOnly) (e.g., 1,3,5)",
         },
+        maxLinesInPlaceHolder: {
+          type: "number",
+          default: 1,
+          demandOption: false,
+          description:
+            "number of lines that can be covered by a placeholder (default: 1)",
+        },
       });
 
     const argv = await parser.argv;
@@ -150,6 +157,7 @@ if (require.main === module) {
         benchmark: argv.benchmark,
         mutateOnly: argv.mutateOnly,
         mutateOnlyLines: lines,
+        maxLinesInPlaceHolder: argv.maxLinesInPlaceHolder,
       };
 
       const baseModel = new Model(
