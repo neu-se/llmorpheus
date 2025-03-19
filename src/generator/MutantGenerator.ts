@@ -299,6 +299,25 @@ export class MutantGenerator {
   }
 
   /**
+   * Remove redundant arguments from the substitution if it replaces a callee in a call.
+   */
+  private removeRedundantArgs(substitution: string, prompt: Prompt): string {
+    if (prompt.spec.isCalleePlaceHolder()) {
+      if (substitution.indexOf("(") !== -1) {
+        const args = substitution.substring(substitution.indexOf("("), substitution.lastIndexOf(")")+1);
+        const codeWithPlaceHolder = prompt.spec.getCodeWithPlaceholder();
+        const indexOfPlaceholder = codeWithPlaceHolder.indexOf("<PLACEHOLDER>");
+        const codeAfterPlaceholder = codeWithPlaceHolder.substring(indexOfPlaceholder + "<PLACEHOLDER>".length);
+        if (codeAfterPlaceholder.startsWith(args)) {
+          const oldSubstitution = substitution;
+          substitution = substitution.substring(0, substitution.indexOf("("));
+        }
+      }  
+    }
+    return substitution;
+  }
+
+  /**
    * Generate mutants from a specific prompt.
    */
   private async generateMutantsFromPrompt(prompt: Prompt, mutants: Mutant[]) {
@@ -321,7 +340,9 @@ export class MutantGenerator {
         let match;
 
         while ((match = regExp.exec(completion.text)) !== null) {
-          const substitution = match[1];
+          let substitution = this.removeRedundantArgs(match[1], prompt);
+          
+
           if (substitution === prompt.getOrig()) {
             this.mutationStats.nrIdentical++;
           } else if (
@@ -582,6 +603,7 @@ export class MutantGenerator {
     this.mutationStats.totalPromptTokens += queryResult.prompt_tokens;
     this.mutationStats.totalCompletionTokens += queryResult.completion_tokens;
     this.mutationStats.totalTokens += queryResult.total_tokens;
+
     return completions.map(
       (completionText) => new Completion(completionText, prompt.getId())
     );
