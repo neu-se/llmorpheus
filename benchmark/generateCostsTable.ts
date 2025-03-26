@@ -1,4 +1,6 @@
 import * as fs from "fs";
+import path from "path";
+
 
 function createTableFooter(dirName: string, runNr: number): string {
   // get meta-info from first benchmark
@@ -65,8 +67,25 @@ function numberWithCommas(x: number): string {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+function unzipDirIfNeccessary(dirName: string) {
+  const results = fs.readdirSync(dirName);
+  if (!results.includes("delta")) {
+    // unzip "mutants.zip" and "results.zip" in dirName
+    for (const zipFile of ["mutants.zip", "results.zip"]) {
+      // execute shell command to unzip
+      const execSync = require("child_process").execSync;
+      execSync(`unzip ${dirName}/zip/${zipFile} -d ${dirName}`, {
+        stdio: "inherit",
+      });
+    }
+  }
+}
+
 // create table with columns: time (LLMorpheus), time (Stryker), prompt tokens, completion tokens, total tokens
 export function generateCostsTable(dirName: string, runNr: number): string {
+
+  unzipDirIfNeccessary(dirName);
+
   const results = fs.readdirSync(dirName);
 
   let totalLLMorpheusTime = 0;
@@ -76,19 +95,23 @@ export function generateCostsTable(dirName: string, runNr: number): string {
   let totalTotalTokens = 0;
 
   let result = `
-% table generated using command: "node benchmark/generateCostsTable.js ${dirName} ${runNr}"
+% table generated using command: "node benchmark/generateCostsTable.js ${dirName}"
 \\begin{table*}[hbt!]
 \\centering
 \{\\scriptsize
 \\begin{tabular}{l||r|r|r|r|r}
-\\multicolumn{1}{c|}{\\bf project} & \\multicolumn{2}{|c|}{\\bf time (sec)} & \\multicolumn{3}{|c}{\\bf \\#tokens} \\\\
+\\multicolumn{1}{c||}{\\bf project} & \\multicolumn{2}{|c|}{\\bf time (sec)} & \\multicolumn{3}{|c}{\\bf \\#tokens} \\\\
                & {\\it LLMorpheus} & {\\it StrykerJS} & {\\bf prompt} & {\\bf compl.} & {\\bf total} \\\\
+\\hline
 \\hline
   `;
   for (const benchmarkName of results) {
     if (benchmarkName.startsWith(".")) continue;
     if (benchmarkName.endsWith(".zip")) continue;
     if (benchmarkName.endsWith(".md")) continue;
+    if (benchmarkName.endsWith(".tex")) continue;
+    if (benchmarkName === "projects") continue;
+    if (benchmarkName === "zip") continue;
     const file = fs.readFileSync(
       `${dirName}/${benchmarkName}/summary.json`,
       "utf8"
@@ -115,11 +138,12 @@ export function generateCostsTable(dirName: string, runNr: number): string {
     const summaryLineTime = summaryLineParts[1].trim();
     const LLMorpheusTime: number = convertToSeconds(summaryLineTime);
 
-    result += `${benchmarkName} & ${formatFixedNr(
+    result += `\\textit{${benchmarkName}} & ${formatFixedNr(
       LLMorpheusTime
     )} & ${formatFixedNr(
       strykerTime
     )} & ${promptTokens} & ${completionTokens} & ${totalTokens} \\\\ \n`;
+    result += `\\hline\n`;
 
     totalLLMorpheusTime += LLMorpheusTime;
     totalStrykerTime += strykerTime;
@@ -127,7 +151,7 @@ export function generateCostsTable(dirName: string, runNr: number): string {
     totalCompletionTokens += parseInt(summary.totalCompletionTokens);
     totalTotalTokens += parseInt(summary.totalTokens);
   }
-  result += `\\hline
+  result += `
   \\textit{Total} & ${formatFixedNr(totalLLMorpheusTime)} & ${formatFixedNr(
     totalStrykerTime
   )} & ${numberWithCommas(totalPromptTokens)} & ${numberWithCommas(
@@ -153,7 +177,7 @@ if (require.main === module) {
     );
   }
   const runNr = parseInt(lastEntry.substring(3));
-  const table = generateCostsTable(dirName + "/zip", runNr);
+  const table = generateCostsTable(dirName, runNr);
 
   console.log(table);
 }

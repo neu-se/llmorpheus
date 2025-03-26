@@ -37,6 +37,7 @@ function tableHeader(runs: string[]): string {
  & \\multicolumn{8}{|c|}{\\it ${models[0]} (${runNrs[0]})} &   \\multicolumn{8}{|c}{\\it ${models[1]} (${runNrs[1]})} \\\\
  & \\Candidates & \\Invalid & \\Identical & \\Duplicate & \\Total & \\Killed & \\Survived & \\Timeout 
  & \\Candidates & \\Invalid & \\Identical & \\Duplicate & \\Total & \\Killed & \\Survived & \\Timeout \\\\
+\\hline
 \\hline`;
 }
 
@@ -47,13 +48,13 @@ function generateDataBlock(baseDir: string, runs: string[]): string {
     for (const run of runs) {
       const strykerInfo = JSON.parse(
         fs.readFileSync(
-          path.join(baseDir, run, "projects", projectName, "StrykerInfo.json"),
+          path.join(baseDir, run, projectName, "StrykerInfo.json"),
           "utf8"
         )
       );
       const llmorpheusInfo = JSON.parse(
         fs.readFileSync(
-          path.join(baseDir, run, "projects", projectName, "summary.json"),
+          path.join(baseDir, run, projectName, "summary.json"),
           "utf8"
         )
       );
@@ -86,8 +87,9 @@ function generateDataBlock(baseDir: string, runs: string[]): string {
     }
     row += " \\\\\n";
     latexTable += row;
+    latexTable += "\\hline";
   }
-  let totalRow: string = "\\hline\\textit{Total}";
+  let totalRow: string = "\\textit{Total}";
   let totalCandidates;
   let totalInvalid;
   let totalIdentical;
@@ -108,13 +110,13 @@ function generateDataBlock(baseDir: string, runs: string[]): string {
     for (const projectName of projectNames) {
       const strykerInfo = JSON.parse(
         fs.readFileSync(
-          path.join(baseDir, run, "projects", projectName, "StrykerInfo.json"),
+          path.join(baseDir, run, projectName, "StrykerInfo.json"),
           "utf8"
         )
       );
       const llmorpheusInfo = JSON.parse(
         fs.readFileSync(
-          path.join(baseDir, run, "projects", projectName, "summary.json"),
+          path.join(baseDir, run, projectName, "summary.json"),
           "utf8"
         )
       );
@@ -151,15 +153,32 @@ function generateDataBlock(baseDir: string, runs: string[]): string {
   return latexTable;
 }
 
+function unzipDirIfNeccessary(dirName: string) {
+  const results = fs.readdirSync(dirName);
+  if (!results.includes("delta")) {
+    // unzip "mutants.zip" and "results.zip" in dirName
+    for (const zipFile of ["mutants.zip", "results.zip"]) {
+      // execute shell command to unzip
+      const execSync = require("child_process").execSync;
+      execSync(`unzip ${dirName}/zip/${zipFile} -d ${dirName}`, {
+        stdio: "inherit",
+      });
+    }
+  }
+}
+
 /**
  * Generate a LaTeX table that shows the number of mutants generated
  * at different temperatures.
  */
 function generateTable(baseDir: string, runs: string[]): string {
+
+  for (const run of runs) {
+      unzipDirIfNeccessary(path.join(baseDir, run));
+    }
+
   let latexTable = `
-% table generated using command: "node benchmark/compareLLMs.js ${baseDir.substring(
-    baseDir.lastIndexOf("/") + 1
-  )}${runs.join(" ")}
+% table generated using command: "node benchmark/compareLLMs.js ${baseDir.substring(baseDir.lastIndexOf("/") + 1)} ${runs.join(" ")}
 \\begin{table*}
 \\centering`;
 
@@ -173,11 +192,8 @@ function generateTable(baseDir: string, runs: string[]): string {
   the following parameters:
    temperature: 0.0, 
     maxTokens: 250, 
-    maxNrPrompts: 2000, 
     template: \\textit{template-full.hb}, 
-    systemPrompt: \\textit{SystemPrompt-MutationTestingExpert.txt}, 
-    rateLimit: 0, 
-    nrAttempts: 3. 
+    systemPrompt: \\textit{SystemPrompt-MutationTestingExpert.txt}. 
   }
  \\label{table:CompareLLMs}
  \\end{table*}`;

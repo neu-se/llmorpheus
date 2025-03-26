@@ -118,7 +118,7 @@ function generateTable(baseDir: string, runs: string[]): void {
   \\hline
   \\hline`;
   for (const projectName of projectNames) {
-    let row = `\\begin{minipage}[t]{1.2cm}${projectName}\\end{minipage}`;
+    let row = `\\begin{minipage}[t]{1.2cm}\\textit{${projectName}}\\end{minipage}`;
     for (const run of runs) {
       const data = fs.readFileSync(
         path.join(baseDir, run, projectName, "StrykerInfo.json"),
@@ -140,7 +140,7 @@ function generateTable(baseDir: string, runs: string[]): void {
         " & " +
         numberWithCommas(nrTimedout);
     }
-    row += " \\\\\n";
+    row += " \\\\\n\\hline\n";
     latexTable += row;
   }
   // add a row with totals

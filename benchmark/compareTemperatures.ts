@@ -74,6 +74,10 @@ function generateTable(baseDir: string, runs: string[]): void {
     &  \\Total & \\Killed & \\Survived & \\Timeout  \\\\
 \\hline
 \\hline`;
+  
+  // add map from run to { total, killed, survived, timeout }
+  const runToInfo = new Map<string, { total: number, killed: number, survived: number, timeout: number }>();
+
   for (const projectName of projectNames) {
     let row = "\\textit{" + projectName + "}";
     for (const run of runs) {
@@ -97,13 +101,47 @@ function generateTable(baseDir: string, runs: string[]): void {
         " & " +
         numberWithCommas(nrTimedout);
     }
-    row += " \\\\\n";
+    row += " \\\\\n\\\hline\n";
     latexTable += row;
   }
+
+  // add a row with totals
+  let row = "\\textit{Total}";
+  for (const run of runs) {
+    let data = runToInfo.get(run);
+    if (data === undefined) {
+      data = { total: 0, killed: 0, survived: 0, timeout: 0 };
+      runToInfo.set(run, data);
+    }
+    for (const projectName of projectNames) {
+      const info = JSON.parse(fs.readFileSync(
+        path.join(baseDir, run, "projects", projectName, "StrykerInfo.json"),
+        "utf8"
+      ));
+      data!.killed += parseInt(info.nrKilled);
+      data!.survived += parseInt(info.nrSurvived);
+      data!.timeout += parseInt(info.nrTimedOut);
+      data!.total  +=
+        parseInt(info.nrKilled) + parseInt(info.nrSurvived) + parseInt(info.nrTimedOut);
+    }
+    row +=
+      " & " +
+      numberWithCommas(data!.total) +
+      " & " +
+      numberWithCommas(data!.killed) +
+      " & " +
+      numberWithCommas(data!.survived) +
+      " & " +
+      numberWithCommas(data!.timeout);
+  }
+  row += " \\\\\n";
+  latexTable += row;
+
   latexTable +=
     "\\end{tabular}\n" +
     "}\n" +
-    "\\caption{Number of mutants generated using the \\CodeLlamaThirtyFour LLM at temperatures 0.0, 0.25, 0.5, and 1.0}\n" +
+    "\\vspace*{2mm}\n" +
+    "\\caption{Number of mutants generated using the \\CodeLlamaThirtyFour LLM at temperatures 0.0, 0.25, 0.5, and 1.0 (showing one run of each)}\n" +
     "\\label{table:Temperature}\n" +
     "\\end{table*}\n";
   console.log(latexTable);

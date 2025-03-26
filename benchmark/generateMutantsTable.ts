@@ -5,7 +5,7 @@ import * as fs from "fs";
  */
 function createTableHeader(dirName: string, runNr: number): string {
   return `
-% table generated using command: "node benchmark/generateMutantsTable.js ${dirName} ${runNr}"
+% table generated using command: "node benchmark/generateMutantsTable.js ${dirName.substring(dirName.indexOf('mutation-testing-data'), dirName.length - 4)}"
 \\begin{table*}[hbt!]
 \\centering
 {\\scriptsize
@@ -160,7 +160,7 @@ export function generateMutantsTable(dirName: string, runNr: number): string {
     const nrMutants = nrKilled + nrSurvived + nrTimedOut;
     const mutScore = jsonStrykerObj.mutationScore;
 
-    result += `\\textit{${projectName}} & ${nrPrompts} & \\ChangedText\{${numberWithCommas(
+    result += `\\textit{${projectName}} & ${numberWithCommas(nrPrompts)} & \\ChangedText\{${numberWithCommas(
       nrCandidates
     )}\} & \\ChangedText\{${numberWithCommas(
       nrSyntacticallyInvalid

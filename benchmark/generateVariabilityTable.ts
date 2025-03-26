@@ -44,7 +44,7 @@ function retrieveMutantsForProject(
   projectName: string
 ): Set<string> {
   const data = fs.readFileSync(
-    path.join(baseDir, run, "zip", projectName, "mutants.json"),
+    path.join(baseDir, run, projectName, "mutants.json"),
     "utf8"
   );
   return new Set(JSON.parse(data).map((x: any) => getMutantInfo(x)));
@@ -92,7 +92,7 @@ function findCommonMutants(
 
 function getModelName(baseDir: string, run: string): string {
   const file = fs.readFileSync(
-    path.join(path.join(baseDir, run, "zip", projectNames[0], "summary.json")),
+    path.join(path.join(baseDir, run, projectNames[0], "summary.json")),
     "utf8"
   );
   const json = JSON.parse(file);
@@ -125,7 +125,7 @@ export function generateVariabilityTable(
   )}"
 \\begin{table}[hbt!]
 \\centering
-{\\footnotesize
+{\\scriptsize
 \\begin{tabular}{l|r|r|r|r}\n
 {\\bf application}  & {\\bf \\#min} &  {\\bf \\#max} &  {\\bf \\#distinct} & {\\bf \\#common}\\\\
 \\hline\n`;
@@ -140,7 +140,7 @@ export function generateVariabilityTable(
     );
     const commonMutants = findCommonMutants(baseDir, runs, projectName);
     const percentage = commonMutants.size / allMutantsSize;
-    latexTable += `${projectName} & ${numberWithCommas(
+    latexTable += `\\\hline\n\\textit{${projectName}} & ${numberWithCommas(
       minMutants
     )} & ${numberWithCommas(maxMutants)} & ${numberWithCommas(
       allMutantsSize
@@ -152,7 +152,7 @@ export function generateVariabilityTable(
   const temperature = getTemperature(baseDir, runs[0]);
   latexTable +=
     "\\end{tabular}\n}\n" +
-    "\\caption{\n" +
+    "\\vspace*{2mm}\n\\caption{\n" +
     `  Variability of the mutants generated in 5 runs of \\ToolName using the \\textit{${modelName}} LLM
        at temperature ${temperature} \\ChangedText{(run ${runs.map((s) =>
       s.replace("run", "\\#")
