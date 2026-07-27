@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import { MockModel } from "../src/model/MockModel";
+import { withReplayModel } from "../src/model/withRecordReplayModel";
 import { ReplayModel } from "../src/model/ReplayModel";
 import { PromptSpecGenerator } from "../src/generator/PromptSpecGenerator";
 import { MutantGenerator } from "../src/generator/MutantGenerator";
@@ -144,7 +144,7 @@ describe("test mutant generation", () => {
   });
 
   it("should find the source files to be mutated in a given source project", async () => {
-    const model = new MockModel(modelName, mockModelDir);
+    const model = withReplayModel(modelName, mockModelDir);
     const outputDir = fs.mkdtempSync(path.join(".", "test-"));
     const metaInfo: MetaInfo = {
       modelName: modelName,
@@ -197,7 +197,7 @@ describe("test mutant generation", () => {
   it("mock model should generate the expected completion for a prompt", async () => {
     const prompt1 = fs.readFileSync("test/input/prompts/prompt1.txt", "utf8");
     // console.log(`prompt1:\n${prompt1}\n`);
-    const model = new MockModel(modelName, mockModelDir);
+    const model = withReplayModel(modelName, mockModelDir);
 
     // use the same options that were used to generate the MockModel
     const queryResult = await model.query(prompt1);
@@ -212,7 +212,7 @@ describe("test mutant generation", () => {
   });
 
   it("should generate the expected mutants for a project", async () => {
-    const model = new MockModel(modelName, mockModelDir);
+    const model = withReplayModel(modelName, mockModelDir);
     const outputDir = fs.mkdtempSync(path.join(".", "test-"));
     const metaInfo: MetaInfo = {
       modelName: modelName,
@@ -250,7 +250,7 @@ describe("test mutant generation", () => {
   });
 
   it("should produce a file summary.json containing a summary of the results", async () => {
-    const model = new MockModel(modelName, mockModelDir);
+    const model = withReplayModel(modelName, mockModelDir);
     const outputDir = fs.mkdtempSync(path.join(".", "test-"));
     const metaInfo: MetaInfo = {
       modelName: modelName,

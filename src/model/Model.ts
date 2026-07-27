@@ -1,14 +1,9 @@
 import fs from "fs";
 import axios from "axios";
 import { performance } from "perf_hooks";
-import {
-  BenchmarkRateLimiter,
-  FixedRateLimiter,
-  RateLimiter,
-} from "../util/promise-utils";
-import { retry } from "../util/promise-utils";
-import { IModel, IModelFailureCounter, PostOptionsType } from "./IModel";
-import { PostOptions, defaultPostOptions } from "./IModel";
+import { withRetry, withRateLimit, withTimeout } from "async-combinators";
+import { BenchmarkRateLimiter } from "../util/promise-utils";
+import { IModel, IModelFailureCounter, PostOptions, defaultPostOptions } from "./IModel";
 import { getEnv } from "../util/code-utils";
 import { IQueryResult } from "./IQueryResult";
 import { MetaInfo } from "../generator/MetaInfo";
@@ -36,8 +31,9 @@ export class Model implements IModel {
   }
 
   protected instanceOptions: PostOptions;
-  protected rateLimiter: RateLimiter;
   protected counter: IModelFailureCounter = { nrRetries: 0, nrFailures: 0 };
+  // Composed stack: axiosPost → withRateLimit? → withTimeout → withRetry
+  private readonly _queryFn: (body: any) => Promise<any>;
 
   constructor(
     private modelName: string,
@@ -45,25 +41,42 @@ export class Model implements IModel {
     private metaInfo: MetaInfo
   ) {
     this.instanceOptions = instanceOptions;
+
+    const axiosPost = (body: any) =>
+      axios.post(Model.LLMORPHEUS_LLM_API_ENDPOINT, body, {
+        headers: Model.LLMORPHEUS_LLM_AUTH_HEADERS,
+      });
+
+    // Rate limiting
+    let limitedPost: typeof axiosPost;
     if (metaInfo.benchmark) {
-      console.log(`*** Using ${this.modelName} with benchmark rate limiter`);
-      this.rateLimiter = new BenchmarkRateLimiter();
+      console.log(`*** Using ${modelName} with benchmark rate limiter`);
+      const benchLimiter = new BenchmarkRateLimiter();
       metaInfo.nrAttempts = 3;
+      limitedPost = (body) => benchLimiter.next(() => axiosPost(body));
     } else if (metaInfo.rateLimit > 0) {
-      this.rateLimiter = new FixedRateLimiter(metaInfo.rateLimit);
       console.log(
-        `*** Using ${this.getModelName()} with rate limit: ${
-          metaInfo.rateLimit
-        } and ${metaInfo.nrAttempts} attempts`
+        `*** Using ${modelName} with rate limit: ${metaInfo.rateLimit} and ${metaInfo.nrAttempts} attempts`
       );
+      limitedPost = withRateLimit(axiosPost, metaInfo.rateLimit);
     } else {
-      this.rateLimiter = new FixedRateLimiter(0);
       console.log(
-        `*** Using ${this.getModelName()} with no rate limit and ${
-          metaInfo.nrAttempts
-        } attempts`
+        `*** Using ${modelName} with no rate limit and ${metaInfo.nrAttempts} attempts`
       );
+      limitedPost = axiosPost;
     }
+
+    const timeoutMs = metaInfo.timeoutMs ?? 60_000;
+    const timedPost = withTimeout(limitedPost, timeoutMs);
+
+    this._queryFn = withRetry(timedPost, metaInfo.nrAttempts, {
+      onRetry: (attempt, err) => {
+        console.log(
+          `  retry ${attempt}/${metaInfo.nrAttempts}: ${(err as Error).message}`
+        );
+        this.counter.nrRetries++;
+      },
+    });
   }
 
   public getModelName(): string {
@@ -107,7 +120,7 @@ export class Model implements IModel {
       `templates/${this.metaInfo.systemPrompt}`,
       "utf8"
     );
-    let body = {
+    let body: any = {
       model: this.getModelName(),
       messages: [
         { role: "system", content: systemPrompt },
@@ -116,28 +129,13 @@ export class Model implements IModel {
       ...options,
     };
     if (Model.LLMORPHEUS_LLM_PROVIDER) {
-      const provider = Model.LLMORPHEUS_LLM_PROVIDER;
-      body = {
-        ...body,
-        provider: provider,
-      };
+      body = { ...body, provider: Model.LLMORPHEUS_LLM_PROVIDER };
     }
 
     performance.mark("llm-query-start");
-    let res;
+    let res: any;
     try {
-      res = await retry(
-        () =>
-          this.rateLimiter.next(() =>
-            axios.post(Model.LLMORPHEUS_LLM_API_ENDPOINT, body, {
-              headers: Model.LLMORPHEUS_LLM_AUTH_HEADERS,
-            })
-          ),
-        this.metaInfo.nrAttempts,
-        () => {
-          this.counter.nrRetries++;
-        }
-      );
+      res = await this._queryFn(body);
     } catch (e) {
       if (res?.status === 429) {
         console.error(`*** 429 error: ${e}`);

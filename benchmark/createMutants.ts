@@ -1,7 +1,7 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { Model } from "../src/model/Model";
-import { CachingModel } from "../src/model/CachingModel";
+import { withRecordReplayModel } from "../src/model/withRecordReplayModel";
 import { ReplayModel } from "../src/model/ReplayModel";
 import { MutantGenerator } from "../src/generator/MutantGenerator";
 import { MetaInfo } from "../src/generator/MetaInfo";
@@ -166,7 +166,7 @@ if (require.main === module) {
         metaInfo
       );
       model = argv.caching
-        ? new CachingModel(baseModel, argv.cacheDir)
+        ? withRecordReplayModel(baseModel, argv.cacheDir, "incrementalRecord")
         : baseModel;
       console.log(
         `*** Generating mutants for ${argv.mutate} in ${packagePath}`

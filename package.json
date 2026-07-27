@@ -39,6 +39,7 @@
     "typescript": "^4.9.3"
   },
   "dependencies": {
+    "async-combinators": "file:../../../projects/async-utils-private",
     "@babel/traverse": "^7.22.5",
     "adm-zip": "^0.5.9",
     "axios": "^1.7.4",

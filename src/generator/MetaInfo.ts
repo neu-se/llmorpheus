@@ -17,4 +17,5 @@ export interface MetaInfo {
   mutateOnly: string | undefined;
   mutateOnlyLines: number[] | undefined;
   maxLinesInPlaceHolder: number;
+  timeoutMs?: number;
 }
