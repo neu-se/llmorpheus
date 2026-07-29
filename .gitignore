@@ -10,3 +10,5 @@ benchmark/*.js.map
 .DS_Store
 test/actual
 test-*
+test/tests.js
+test/tests.js.map

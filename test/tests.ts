@@ -36,6 +36,7 @@ describe("test mutant generation", () => {
       mutate: "src/**/*.ts",
       ignore: "**/*.spec.ts",
       rateLimit: 1000,
+      timeout: 10_000,
       mutateOnly: undefined,
       mutateOnlyLines: undefined,
       maxLinesInPlaceHolder: 1,
@@ -79,6 +80,7 @@ describe("test mutant generation", () => {
       temperature: 0,
       maxNrPrompts: 100,
       nrAttempts: 1,
+      timeout: 10_000,
       mutate: "src/**/*.ts",
       ignore: "**/*.spec.ts",
       rateLimit: 1000,
@@ -155,6 +157,7 @@ describe("test mutant generation", () => {
       mutate: "src/**/*.ts",
       ignore: "**/*.spec.ts",
       rateLimit: 1000,
+      timeout: 10_000,
       mutateOnly: undefined,
       mutateOnlyLines: undefined,
       maxLinesInPlaceHolder: 1,
@@ -222,6 +225,7 @@ describe("test mutant generation", () => {
       mutate: "src/**/TreeSorter.ts",
       ignore: "src/**/*.spec.ts",
       rateLimit: 1000,
+      timeout: 10_000,
       mutateOnly: undefined,
       mutateOnlyLines: undefined,
       maxLinesInPlaceHolder: 1,
@@ -248,6 +252,7 @@ describe("test mutant generation", () => {
   it("should produce a file summary.json containing a summary of the results", async () => {
     const model = new MockModel(modelName, mockModelDir);
     const outputDir = fs.mkdtempSync(path.join(".", "test-"));
+    console.log(`outputDir = ${outputDir}`);
     const metaInfo: MetaInfo = {
       modelName: modelName,
       template: promptTemplateFileName,
@@ -256,6 +261,7 @@ describe("test mutant generation", () => {
       temperature: 0,
       maxNrPrompts: 100,
       nrAttempts: 1,
+      timeout: 10_000,
       mutate: "src/**/TreeSorter.js",
       ignore: "src/**/*.spec.ts",
       rateLimit: 1000,
@@ -295,6 +301,7 @@ describe("test mutant generation", () => {
       temperature: 0,
       maxNrPrompts: 1250,
       nrAttempts: 3,
+      timeout: 10_000,
       mutate: "src/**/TreeSorter.ts",
       ignore: "**/*.spec.ts",
       rateLimit: 0,
@@ -439,6 +446,7 @@ describe("test mutant generation", () => {
       temperature: 0,
       maxNrPrompts: 1250,
       nrAttempts: 3,
+      timeout: 10_000,
       mutate: "src/**/TreeSorter.ts",
       ignore: "**/*.spec.ts",
       rateLimit: 0,
@@ -586,6 +594,7 @@ describe("test mutant generation", () => {
       temperature: 0,
       maxNrPrompts: 1250,
       nrAttempts: 3,
+      timeout: 10_000,
       mutate: "src/**/TreeSorter.ts",
       ignore: "**/*.spec.ts",
       rateLimit: 0,

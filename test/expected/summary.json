@@ -17,6 +17,7 @@
     "temperature": 0,
     "maxNrPrompts": 100,
     "nrAttempts": 1,
+    "timeout": 10000,
     "mutate": "src/**/TreeSorter.js",
     "ignore": "src/**/*.spec.ts",
     "rateLimit": 1000,
