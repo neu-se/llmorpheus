@@ -1,12 +1,8 @@
 import fs from "fs";
 import axios from "axios";
 import { performance } from "perf_hooks";
-import {
-  FixedRateLimiter,
-  RateLimiter,
-} from "../util/promise-utils";
-import { retry } from "../util/promise-utils";
-import { IModel, IModelFailureCounter, PostOptionsType } from "./IModel";
+import { withRetry, withRateLimit, withTimeout } from "async-combinators";
+import { IModel, IModelFailureCounter } from "./IModel";
 import { PostOptions, defaultPostOptions } from "./IModel";
 import { getEnv } from "../util/code-utils";
 import { IQueryResult } from "./IQueryResult";
@@ -35,8 +31,9 @@ export class Model implements IModel {
   }
 
   protected instanceOptions: PostOptions;
-  protected rateLimiter: RateLimiter;
   protected counter: IModelFailureCounter = { nrRetries: 0, nrFailures: 0 };
+  // Composed stack: axiosPost → withRateLimit? → withTimeout → withRetry
+  private readonly _queryFn: (body: any) => Promise<any>;
 
   constructor(
     private modelName: string,
@@ -44,21 +41,40 @@ export class Model implements IModel {
     private metaInfo: MetaInfo
   ) {
     this.instanceOptions = instanceOptions;
+
+    const axiosPost = (body: any) =>
+      axios.post(Model.LLMORPHEUS_LLM_API_ENDPOINT, body, {
+        headers: Model.LLMORPHEUS_LLM_AUTH_HEADERS,
+      });
+
+    const limited =
+      metaInfo.rateLimit > 0
+        ? withRateLimit(axiosPost, metaInfo.rateLimit)
+        : axiosPost;
+
+    const timed = withTimeout(limited, 60_000);
+
     if (metaInfo.rateLimit > 0) {
-      this.rateLimiter = new FixedRateLimiter(metaInfo.rateLimit);
       console.log(
-        `*** Using ${this.getModelName()} with rate limit: ${
-          metaInfo.rateLimit
-        } and ${metaInfo.nrAttempts} attempts`
+        `*** Using ${this.getModelName()} with rate limit: ${metaInfo.rateLimit} and ${metaInfo.nrAttempts} attempts`
       );
     } else {
-      this.rateLimiter = new FixedRateLimiter(0);
       console.log(
-        `*** Using ${this.getModelName()} with no rate limit and ${
-          metaInfo.nrAttempts
-        } attempts`
+        `*** Using ${this.getModelName()} with no rate limit and ${metaInfo.nrAttempts} attempts`
       );
     }
+
+    this._queryFn = withRetry(timed, metaInfo.nrAttempts, {
+      onRetry: (attempt, err) => {
+        this.counter.nrRetries++;
+        if ((err as any)?.response?.status === 429) {
+          console.error(`*** 429 error: ${(err as Error).message}`);
+          this.counter.nrFailures++;
+        } else {
+          console.log(`  retry ${attempt}/${metaInfo.nrAttempts}: ${(err as Error).message}`);
+        }
+      },
+    });
   }
 
   public getModelName(): string {
@@ -119,27 +135,7 @@ export class Model implements IModel {
     }
 
     performance.mark("llm-query-start");
-    let res;
-    try {
-      res = await retry(
-        () =>
-          this.rateLimiter.next(() =>
-            axios.post(Model.LLMORPHEUS_LLM_API_ENDPOINT, body, {
-              headers: Model.LLMORPHEUS_LLM_AUTH_HEADERS,
-            })
-          ),
-        this.metaInfo.nrAttempts,
-        () => {
-          this.counter.nrRetries++;
-        }
-      );
-    } catch (e) {
-      if (res?.status === 429) {
-        console.error(`*** 429 error: ${e}`);
-        this.counter.nrFailures++;
-      }
-      throw e;
-    }
+    const res = await this._queryFn(body);
 
     performance.measure(
       `llm-query:${JSON.stringify({
