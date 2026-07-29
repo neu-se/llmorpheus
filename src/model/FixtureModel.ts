@@ -1,5 +1,5 @@
 import path from "path";
-import { withRecordReplay } from "async-combinators";
+import { withRecordReplay, RecordReplayMode } from "async-combinators";
 import { IModel, IModelFailureCounter, PostOptions } from "./IModel";
 import { IQueryResult } from "./IQueryResult";
 
@@ -11,11 +11,22 @@ type FixtureValue = {
 };
 
 /**
- * A model that replays LLM responses from fixture files recorded by withRecordReplay.
- * Drop-in replacement for MockModel.
+ * A model that records and replays LLM responses using fixture files.
  *
- * Fixture files live at {fixtureDir}/{modelName}/{hash[0:2]}/{hash}, where the
- * hash is SHA256 of JSON.stringify({ modelName, prompt, options }).
+ * Modes (passed as the last constructor argument):
+ *  - "replay" (default) — replay from fixtures only; fail loudly on a miss.
+ *    No underlying model needed.
+ *  - "incrementalRecord" — replay if a fixture exists, otherwise call the
+ *    underlying model and record the result.
+ *  - "record" — always call the underlying model and overwrite all fixtures.
+ *
+ * Fixture files live at {fixtureDir}/{modelName}/{hash[0:2]}/{hash}.
+ *
+ * Workflow:
+ *  1. Create a test with mode "incrementalRecord" and a real Model underneath.
+ *  2. Run the test to populate fixtures from the live LLM.
+ *  3. Examine results, update assertions.
+ *  4. Switch mode to "replay" and remove the underlying model.
  */
 export class FixtureModel implements IModel {
   private static readonly DEFAULT_OPTIONS: PostOptions = {
@@ -29,22 +40,43 @@ export class FixtureModel implements IModel {
     opts: PostOptions
   ) => Promise<FixtureValue>;
 
+  /**
+   * @param modelName     The model name (used in fixture paths and key computation).
+   * @param fixtureDir    Directory under which fixtures are stored.
+   * @param instanceOptions  Options baked into the fixture key (must match what
+   *                      was used when fixtures were recorded).
+   * @param mode          Record/replay mode (default: "replay").
+   * @param underlyingModel  Required for "record" and "incrementalRecord" modes;
+   *                      ignored in "replay" mode.
+   */
   constructor(
     private readonly modelName: string,
     fixtureDir: string,
-    private readonly instanceOptions: PostOptions = FixtureModel.DEFAULT_OPTIONS
+    private readonly instanceOptions: PostOptions = FixtureModel.DEFAULT_OPTIONS,
+    mode: RecordReplayMode = "replay",
+    underlyingModel?: IModel
   ) {
+    if (mode !== "replay" && !underlyingModel) {
+      throw new Error(
+        `FixtureModel: an underlyingModel is required when mode is "${mode}"`
+      );
+    }
+
     const cacheDir = path.join(fixtureDir, modelName);
 
     this.replayQuery = withRecordReplay(
-      async (_prompt: string, _opts: PostOptions): Promise<FixtureValue> => {
-        throw new Error(
-          "FixtureModel: no recording found — run in incrementalRecord mode to add new fixtures"
-        );
+      async (prompt: string, opts: PostOptions): Promise<FixtureValue> => {
+        const result = await underlyingModel!.query(prompt, opts);
+        return {
+          completions: [...result.completions],
+          prompt_tokens: result.prompt_tokens,
+          completion_tokens: result.completion_tokens,
+          total_tokens: result.total_tokens,
+        };
       },
       cacheDir,
       {
-        mode: "replay",
+        mode,
         makeKey: ([prompt, opts]) =>
           JSON.stringify({
             modelName,

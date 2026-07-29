@@ -3,6 +3,7 @@ import path from "path";
 
 import { FixtureModel } from "../src/model/FixtureModel";
 import { ReplayModel } from "../src/model/ReplayModel";
+// import { Model } from "../src/model/Model"; // uncomment when adding a new live-LLM test
 import { PromptSpecGenerator } from "../src/generator/PromptSpecGenerator";
 import { MutantGenerator } from "../src/generator/MutantGenerator";
 import { expect } from "chai";
@@ -729,6 +730,113 @@ describe("test mutant generation", () => {
         "utf8"
       );
       expect(actualFileContents).to.equal(expectedFileContents);
+    }
+
+    fs.rmdirSync(outputDir, { recursive: true });
+  });
+});
+
+/**
+ * HOW TO ADD A NEW MODEL TEST
+ * ============================
+ * 1. Copy the describe block below and update the model name, fixture options
+ *    (max_tokens etc.), and metaInfo to match the new model.
+ *
+ * 2. Switch FixtureModel to "incrementalRecord" mode and add the underlying Model:
+ *
+ *      import { Model } from "../src/model/Model"; // uncomment at top of file
+ *
+ *      const underlyingModel = new Model(
+ *        modelName,
+ *        { temperature: 0, max_tokens: maxTokens },
+ *        metaInfo
+ *      );
+ *      const model = new FixtureModel(
+ *        modelName,
+ *        fixtureDir,
+ *        { max_tokens: maxTokens, temperature: 0, top_p: 1 },
+ *        "incrementalRecord",
+ *        underlyingModel
+ *      );
+ *
+ * 3. Make sure LLMORPHEUS_LLM_API_ENDPOINT, LLMORPHEUS_LLM_AUTH_HEADERS, etc.
+ *    are set in your environment, then run the test:
+ *      npm test -- --grep "<your test name>"
+ *    Fixtures are saved to test/input/mockModel/{modelName}/ and
+ *    test/expected/{modelName}/mutants.json is written on the first run.
+ *
+ * 4. Review test/expected/{modelName}/mutants.json and commit it along with
+ *    the fixture files in test/input/mockModel/{modelName}/.
+ *
+ * 5. Switch FixtureModel back to "replay" mode and remove the underlyingModel:
+ *      const model = new FixtureModel(modelName, fixtureDir, instanceOptions, "replay");
+ *    Re-comment the Model import. The test now runs offline from fixtures.
+ */
+describe("test mutant generation with GPT-5.5", () => {
+  const gpt55ModelName = "gpt-5.5";
+  const gpt55FixtureDir = "test/input/mockModel";
+  const gpt55SubDirName = `template-full_${gpt55ModelName}_0.0`;
+  const gpt55MaxTokens = 4096;
+
+  beforeEach(() => {
+    Prompt.resetIdCounter();
+    Completion.resetIdCounter();
+  });
+
+  it("should generate mutants for TreeSorter.ts using gpt-5.5", async function () {
+    this.timeout(600_000); // 10 minutes — live LLM calls can be slow
+    const metaInfo: MetaInfo = {
+      modelName: gpt55ModelName,
+      template: promptTemplateFileName,
+      systemPrompt: "SystemPrompt-MutationTestingExpert.txt",
+      maxTokens: gpt55MaxTokens,
+      temperature: 0,
+      maxNrPrompts: 100,
+      nrAttempts: 3,
+      mutate: "src/**/TreeSorter.ts",
+      ignore: "src/**/*.spec.ts",
+      rateLimit: 1000,
+      timeout: 60_000,
+      mutateOnly: undefined,
+      mutateOnlyLines: undefined,
+      maxLinesInPlaceHolder: 1,
+    };
+
+    // On first run (live LLM): use "incrementalRecord" to populate fixtures.
+    // Once you have reviewed the results, change to "replay" and remove the
+    // underlyingModel argument.
+    const model = new FixtureModel(
+      gpt55ModelName,
+      gpt55FixtureDir,
+      { max_tokens: gpt55MaxTokens, temperature: 0, top_p: 1 },
+      "replay"
+    );
+
+    const outputDir = fs.mkdtempSync(path.join(".", "test-"));
+    const mutantGenerator = new MutantGenerator(
+      model,
+      outputDir,
+      sorterProjectPath,
+      metaInfo
+    );
+    await mutantGenerator.generateMutants();
+
+    const actualMutantsJson = fs.readFileSync(
+      path.join(outputDir, gpt55SubDirName, "mutants.json"),
+      "utf8"
+    );
+
+    // On first run, write the expected output so it can be reviewed and committed.
+    const expectedMutantsPath = "./test/expected/gpt-5.5/mutants.json";
+    if (!fs.existsSync(path.dirname(expectedMutantsPath))) {
+      fs.mkdirSync(path.dirname(expectedMutantsPath), { recursive: true });
+    }
+    if (!fs.existsSync(expectedMutantsPath)) {
+      fs.writeFileSync(expectedMutantsPath, actualMutantsJson, "utf8");
+      console.log(`*** Wrote expected output to ${expectedMutantsPath} — review and commit it.`);
+    } else {
+      const expectedMutantsJson = fs.readFileSync(expectedMutantsPath, "utf8");
+      expect(actualMutantsJson).to.equal(expectedMutantsJson);
     }
 
     fs.rmdirSync(outputDir, { recursive: true });
