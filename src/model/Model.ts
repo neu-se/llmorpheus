@@ -52,15 +52,15 @@ export class Model implements IModel {
         ? withRateLimit(axiosPost, metaInfo.rateLimit)
         : axiosPost;
 
-    const timed = withTimeout(limited, 60_000);
+    const timed = withTimeout(limited, metaInfo.timeout);
 
     if (metaInfo.rateLimit > 0) {
       console.log(
-        `*** Using ${this.getModelName()} with rate limit: ${metaInfo.rateLimit} and ${metaInfo.nrAttempts} attempts`
+        `*** Using ${this.getModelName()} with rate limit: ${metaInfo.rateLimit} and ${metaInfo.nrAttempts} attempts and timeout ${metaInfo.timeout}`
       );
     } else {
       console.log(
-        `*** Using ${this.getModelName()} with no rate limit and ${metaInfo.nrAttempts} attempts`
+        `*** Using ${this.getModelName()} with no rate limit and ${metaInfo.nrAttempts} attempts and timeout ${metaInfo.timeout}`
       );
     }
 

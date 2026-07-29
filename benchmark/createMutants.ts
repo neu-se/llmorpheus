@@ -79,6 +79,12 @@ if (require.main === module) {
           demandOption: false,
           description: "number of attempts to generate a completion",
         },
+        timeout: {
+          type: "number",
+          default: 60_000,
+          demandOption: false,
+          description: "number of milliseconds we wait for the model to respond",
+        },
         maxTokens: {
           type: "number",
           default: 4096,
@@ -143,6 +149,7 @@ if (require.main === module) {
         maxNrPrompts: argv.maxNrPrompts,
         rateLimit: argv.rateLimit,
         nrAttempts: argv.nrAttempts,
+        timeout: argv.timeout,
         template: argv.template,
         systemPrompt: argv.systemPrompt,
         mutate: argv.mutate,

@@ -11,6 +11,7 @@ export interface MetaInfo {
   maxNrPrompts: number;
   nrAttempts: number;
   rateLimit: number;
+  timeout: number;
   mutate: string;
   ignore: string;
   mutateOnly: string | undefined;
