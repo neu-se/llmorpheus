@@ -10,6 +10,12 @@
     "Jon Bell <j.bell@northeastern.edu>"
   ],
   "license": "MIT",
+  "overrides": {
+    "diff": "^9.0.0",
+    "brace-expansion": "^5.0.8",
+    "minimatch": "^10.2.6",
+    "serialize-javascript": "^7.0.7"
+  },
   "scripts": {
     "prebuild": "npm i",
     "build": "tsc -p src && tsc -p benchmark",
@@ -28,19 +34,21 @@
     "@types/deep-equal-in-any-order": "^1.0.1",
     "@types/estraverse": "^5.1.1",
     "@types/levenshtein": "^1.0.1",
-    "@types/mocha": "^9.1.1",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^12.20.55",
     "@types/yargs": "^17.0.10",
     "chai": "^4.3.6",
     "deep-equal-in-any-order": "^2.0.0",
     "prettier": "^2.8.8",
     "source-map-support": "^0.5.21",
-    "ts-mocha": "^10.0.0",
+    "mocha": "^11.7.6",
+    "ts-mocha": "^11.1.0",
     "typescript": "^4.9.3"
   },
   "dependencies": {
     "@babel/traverse": "^7.22.5",
-    "adm-zip": "^0.5.9",
+    "adm-zip": "^0.6.0",
+    "async-combinators": "^0.1.0",
     "axios": "^1.7.4",
     "common-js-file-extensions": "^1.0.4",
     "console-stamp": "^3.1.0",
@@ -50,8 +58,7 @@
     "fast-glob": "^3.2.12",
     "handlebars": "^4.7.7",
     "levenshtein": "^1.0.5",
-    "mocha": "^10.0.0",
-    "nyc": "^15.1.0",
+    "nyc": "^18.0.0",
     "pirates": "^4.0.5",
     "simple-git": "^3.16.0",
     "yargs": "^17.6.2"
