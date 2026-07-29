@@ -170,13 +170,76 @@ export class Model implements IModel {
     );
 
     const completions = new Set<string>();
-    completions.add(res.data.choices[0].message.content);
+    const content = Model.extractContent(res.data.choices[0].message);
+    if (content !== null) {
+      completions.add(content);
+    } else {
+      console.warn(
+        `*** Warning: received null content from model ${this.modelName}. Full message: ${JSON.stringify(res.data.choices[0].message)}`
+      );
+    }
     return {
       completions,
       prompt_tokens,
       completion_tokens,
       total_tokens,
     };
+  }
+
+  /**
+   * Extract the text content from a chat completion message, handling reasoning
+   * models that may return content in non-standard fields.
+   *
+   * Different providers use different field names for the model's output when
+   * chain-of-thought reasoning is involved:
+   *
+   *  - Standard OpenAI:           message.content  (string)
+   *  - Inline think tags (vLLM):  message.content  ("<think>...</think>answer")
+   *  - DeepSeek-R1 / some GLM:   message.reasoning_content  (content may be null)
+   *  - GLM-5.2 via OpenRouter:    message.reasoning  (content is null,
+   *                                reasoning_details[] holds the same text)
+   *
+   * Strategy (in priority order):
+   *  1. Use message.content if non-empty, after stripping <think> blocks.
+   *  2. Fall back to message.reasoning_content if non-empty.
+   *  3. Fall back to message.reasoning if non-empty.
+   *  4. Fall back to the concatenated text of message.reasoning_details[].text.
+   *  5. Return null — caller will log a warning.
+   */
+  private static extractContent(message: any): string | null {
+    // Helper: return s if it's a non-empty string, otherwise null
+    const nonEmpty = (s: any): string | null =>
+      typeof s === "string" && s.trim().length > 0 ? s.trim() : null;
+
+    // 1. Standard content field — strip any embedded <think> blocks first
+    const rawContent: string | null | undefined = message?.content;
+    if (rawContent != null && rawContent.length > 0) {
+      const stripped = rawContent.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+      if (stripped.length > 0) {
+        return stripped;
+      }
+      // content existed but was only <think> — fall through
+    }
+
+    // 2. DeepSeek-R1 / some GLM variants
+    const result2 = nonEmpty(message?.reasoning_content);
+    if (result2 !== null) return result2;
+
+    // 3. GLM-5.2 (via OpenRouter) and similar
+    const result3 = nonEmpty(message?.reasoning);
+    if (result3 !== null) return result3;
+
+    // 4. reasoning_details array (GLM-5.2 mirrors reasoning here)
+    const details: any[] | undefined = message?.reasoning_details;
+    if (Array.isArray(details) && details.length > 0) {
+      const combined = details
+        .map((d: any) => (typeof d?.text === "string" ? d.text : ""))
+        .join("\n")
+        .trim();
+      if (combined.length > 0) return combined;
+    }
+
+    return null;
   }
 
   public getFailureCounter(): IModelFailureCounter {

@@ -328,6 +328,12 @@ export class MutantGenerator {
 
       const completions = await this.getCompletionsForPrompt(prompt);
       for (const completion of completions) {
+        if (!completion.text) {
+          console.warn(
+            `*** Warning: skipping empty completion for prompt ${prompt.getId()}`
+          );
+          continue;
+        }
         fs.writeFileSync(
           `${path.join(
             this.outputDir,

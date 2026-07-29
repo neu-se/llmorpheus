@@ -88,9 +88,9 @@ if (require.main === module) {
         },
         maxTokens: {
           type: "number",
-          default: 250,
+          default: 4096,
           demandOption: false,
-          description: "maximum number of tokens in a completion",
+          description: "maximum number of tokens in a completion (default: 4096; reasoning models consume extra tokens for chain-of-thought)",
         },
         maxNrPrompts: {
           type: "number",
