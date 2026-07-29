@@ -1,38 +1,20 @@
 # LLMorpheus
 
-LLMorpheus is a tool for applying mutation testing to npm packages
-written in JavaScript/TypeScript using a large language model (LLM).
+LLMorpheus is a tool for applying mutation testing to npm packages written in JavaScript/TypeScript using a large language model (LLM).
 
-Note that LLMorpheus represents an early exploration in the use of LLMs for
-mutation testing, and has been made available in open source as a basis for
-research and exploration.  
+Note that LLMorpheus represents an early exploration in the use of LLMs for mutation testing, and has been made available in open source as a basis for research and exploration.  
 
 ## Background
 
-LLMorpheus generates mutants for a given package `p` by prompting the LLM with a
-prompt that asks it to apply mutations to specific locations in the source code
-of `p`. This prompt includes some background on mutation testing, a fragment
-of `p`'s source code in which a code fragment is replaced with the word
-`PLACEHOLDER`, and a request to suggest what code fragments should be 
-substituted for the placeholder. The LLM is asked to produce output in a 
-specific format in which the mutation suggestions occur as fenced code blocks.
-The completion provided by the LLM is then analyzed to extract the suggested
-mutants, and the resulting modified source code is checked for syntactic
-validity. All syntactically valid mutants are written to a file `mutants.json`.
+LLMorpheus generates mutants for a given package `p` by prompting the LLM with a prompt that asks it to apply mutations to specific locations in the source code of `p`. This prompt includes some background on mutation testing, a fragment of `p`'s source code in which a code fragment is replaced with the word `PLACEHOLDER`, and a request to suggest what code fragments should be substituted for the placeholder. The LLM is asked to produce output in a specific format in which the mutation suggestions occur as fenced code blocks. The completion provided by the LLM is then analyzed to extract the suggested mutants, and the resulting modified source code is checked for syntactic validity. All syntactically valid mutants are written to a file `mutants.json`.
 
-The resulting set of mutants is then provided to a modified version of the
-popular [StrykerJS ](https://github.com/franktip/stryker-js), a state-of-the-art mutation testing tool. Running this version of StrykerJS produces an interactive web page that can be inspected to reveal which mutants are killed, survived, or timed out. 
+The resulting set of mutants is then provided to a modified version of the popular [StrykerJS ](https://github.com/franktip/stryker-js), a state-of-the-art mutation testing tool. Running this version of StrykerJS produces an interactive web page that can be inspected to reveal which mutants are killed, survived, or timed out. 
 
-Unlike other systems for mutation testing, LLMorpheus does not rely on a fixed
-set of mutation operators, but instead relies on an LLM to suggest suitable code fragments.
+Unlike other systems for mutation testing, LLMorpheus does not rely on a fixed set of mutation operators, but instead relies on an LLM to suggest suitable code fragments.
 
 ## Requirements
 
-In general, to be able to run LLMorpheus you need access to a OpenAI-style LLM
-with chat API. Set the `LLMORPHEUS_LLM_API_ENDPOINT` environment variable to
-the URL of the LLM API endpoint you want to use, and
-`LLMORPHEUS_LLM_AUTH_HEADERS` to a JSON object containing the headers you need to
-authenticate with the API.
+In general, to be able to run LLMorpheus you need access to a OpenAI-style LLM with chat API. Set the `LLMORPHEUS_LLM_API_ENDPOINT` environment variable to the URL of the LLM API endpoint you want to use, and `LLMORPHEUS_LLM_AUTH_HEADERS` to a JSON object containing the headers you need to authenticate with the API.
 
 Typical values for these variables might be:
 
@@ -41,20 +23,13 @@ Typical values for these variables might be:
 
 ## Installation
 
-The `src/` directory contains the source code for LLMorpheus, which is written in
-TypeScript and gets compiled into the `dist/` directory. Tests are in `test/`;
-the `benchmark/` directory contains a benchmarking harness for running LLMorpheus
-on multiple npm packages.
+The `src/` directory contains the source code for LLMorpheus, which is written in TypeScript and gets compiled into the `dist/` directory. Tests are in `test/`; the `benchmark/` directory contains a benchmarking harness for running LLMorpheus on multiple npm packages.
 
-In the root directory of a checkout of this repository, run `npm build` to
-install dependencies and build the package.
+In the root directory of a checkout of this repository, run `npm build` to install dependencies and build the package.
 
-You can also use `npm run build:watch` to automatically build anytime you make
-changes to the code. Note, however, that this will not automatically install
-dependencies, and also will not build the benchmarking harness.
+You can also use `npm run build:watch` to automatically build anytime you make changes to the code. Note, however, that this will not automatically install dependencies, and also will not build the benchmarking harness.
 
-Use `npm run test` to run the tests. For convenience, this will also install
-dependencies and run a build.
+Use `npm run test` to run the tests. For convenience, this will also install dependencies and run a build.
 
 ## Benchmarking
 
@@ -96,8 +71,9 @@ To run our custom version of Stryker, perform the following steps:
 
 ### Running on Actions
 
-The `experiment.yml` workflow runs an experiment on GitHub Actions,
-producing the final report as an artifact you can download. The `mutants` artifact contains all mutants, prompts, and related information computed by LLMorpheus, and the `results` artifact contains the report produced by StrykerJS. 
+*NOTE: The GitHub Actions scripts are out of date*
+
+The `experiment.yml` workflow runs an experiment on GitHub Actions, producing the final report as an artifact you can download. The `mutants` artifact contains all mutants, prompts, and related information computed by LLMorpheus, and the `results` artifact contains the report produced by StrykerJS. 
 
 The `StandardStryker.yml` workflow runs the standard StrykerJS mutators.
 
@@ -121,7 +97,7 @@ This project is licensed under the terms of the MIT open source license. Please 
 
 ## Paper
 
-A paper about LLMorpheus is available on [arXiv](https://arxiv.org/abs/2404.09952).
+A paper about LLMorpheus appeared in [IEEE TSE](https://ieeexplore.ieee.org/document/10977824).
 
 ## Maintainers
 
