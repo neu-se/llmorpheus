@@ -15,7 +15,7 @@ export interface IModel {
 }
 
 export const defaultPostOptions = {
-  max_tokens: 250,
+  max_tokens: 4096,
   temperature: 0,
   top_p: 1, // no need to change this
 };
