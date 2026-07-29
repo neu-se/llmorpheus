@@ -2,7 +2,6 @@ import fs from "fs";
 import axios from "axios";
 import { performance } from "perf_hooks";
 import {
-  BenchmarkRateLimiter,
   FixedRateLimiter,
   RateLimiter,
 } from "../util/promise-utils";
@@ -45,11 +44,7 @@ export class Model implements IModel {
     private metaInfo: MetaInfo
   ) {
     this.instanceOptions = instanceOptions;
-    if (metaInfo.benchmark) {
-      console.log(`*** Using ${this.modelName} with benchmark rate limiter`);
-      this.rateLimiter = new BenchmarkRateLimiter();
-      metaInfo.nrAttempts = 3;
-    } else if (metaInfo.rateLimit > 0) {
+    if (metaInfo.rateLimit > 0) {
       this.rateLimiter = new FixedRateLimiter(metaInfo.rateLimit);
       console.log(
         `*** Using ${this.getModelName()} with rate limit: ${

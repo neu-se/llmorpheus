@@ -36,7 +36,6 @@ describe("test mutant generation", () => {
       mutate: "src/**/*.ts",
       ignore: "**/*.spec.ts",
       rateLimit: 1000,
-      benchmark: false,
       mutateOnly: undefined,
       mutateOnlyLines: undefined,
       maxLinesInPlaceHolder: 1,
@@ -83,7 +82,6 @@ describe("test mutant generation", () => {
       mutate: "src/**/*.ts",
       ignore: "**/*.spec.ts",
       rateLimit: 1000,
-      benchmark: false,
       mutateOnly: undefined,
       mutateOnlyLines: undefined,
       maxLinesInPlaceHolder: 1,
@@ -157,7 +155,6 @@ describe("test mutant generation", () => {
       mutate: "src/**/*.ts",
       ignore: "**/*.spec.ts",
       rateLimit: 1000,
-      benchmark: false,
       mutateOnly: undefined,
       mutateOnlyLines: undefined,
       maxLinesInPlaceHolder: 1,
@@ -225,7 +222,6 @@ describe("test mutant generation", () => {
       mutate: "src/**/TreeSorter.ts",
       ignore: "src/**/*.spec.ts",
       rateLimit: 1000,
-      benchmark: false,
       mutateOnly: undefined,
       mutateOnlyLines: undefined,
       maxLinesInPlaceHolder: 1,
@@ -263,7 +259,6 @@ describe("test mutant generation", () => {
       mutate: "src/**/TreeSorter.js",
       ignore: "src/**/*.spec.ts",
       rateLimit: 1000,
-      benchmark: false,
       mutateOnly: undefined,
       mutateOnlyLines: undefined,
       maxLinesInPlaceHolder: 1,
@@ -303,7 +298,6 @@ describe("test mutant generation", () => {
       mutate: "src/**/TreeSorter.ts",
       ignore: "**/*.spec.ts",
       rateLimit: 0,
-      benchmark: false,
       mutateOnly: undefined,
       mutateOnlyLines: undefined,
       maxLinesInPlaceHolder: 1,
@@ -382,9 +376,6 @@ describe("test mutant generation", () => {
     expect(actualSummaryJson.metaInfo.ignore).to.equal(
       expectedSummaryJson.metaInfo.ignore
     );
-    expect(actualSummaryJson.metaInfo.benchmark).to.equal(
-      expectedSummaryJson.metaInfo.benchmark
-    );
 
     // now check that the actual prompt and completion files are the same as the expected ones
     const actualFiles = fs.readdirSync(
@@ -451,7 +442,6 @@ describe("test mutant generation", () => {
       mutate: "src/**/TreeSorter.ts",
       ignore: "**/*.spec.ts",
       rateLimit: 0,
-      benchmark: false,
       mutateOnly: undefined,
       mutateOnlyLines: [9],
       maxLinesInPlaceHolder: 1,
@@ -533,9 +523,6 @@ describe("test mutant generation", () => {
     expect(actualSummaryJson.metaInfo.ignore).to.equal(
       expectedSummaryJson.metaInfo.ignore
     );
-    expect(actualSummaryJson.metaInfo.benchmark).to.equal(
-      expectedSummaryJson.metaInfo.benchmark
-    );
 
     // now check that the actual prompt and completion files are the same as the expected ones
     const actualFiles = fs.readdirSync(
@@ -602,7 +589,6 @@ describe("test mutant generation", () => {
       mutate: "src/**/TreeSorter.ts",
       ignore: "**/*.spec.ts",
       rateLimit: 0,
-      benchmark: false,
       mutateOnly: "<",
       mutateOnlyLines: undefined,
       maxLinesInPlaceHolder: 1,
@@ -683,9 +669,6 @@ describe("test mutant generation", () => {
     );
     expect(actualSummaryJson.metaInfo.ignore).to.equal(
       expectedSummaryJson.metaInfo.ignore
-    );
-    expect(actualSummaryJson.metaInfo.benchmark).to.equal(
-      expectedSummaryJson.metaInfo.benchmark
     );
 
     // now check that the actual prompt and completion files are the same as the expected ones

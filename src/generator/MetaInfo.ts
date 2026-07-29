@@ -13,7 +13,6 @@ export interface MetaInfo {
   rateLimit: number;
   mutate: string;
   ignore: string;
-  benchmark: boolean;
   mutateOnly: string | undefined;
   mutateOnlyLines: number[] | undefined;
   maxLinesInPlaceHolder: number;

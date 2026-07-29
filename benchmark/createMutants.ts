@@ -79,13 +79,6 @@ if (require.main === module) {
           demandOption: false,
           description: "number of attempts to generate a completion",
         },
-        benchmark: {
-          type: "boolean",
-          default: false,
-          demandOption: false,
-          description:
-            "use custom rate-limiting for benchmarking (if specified, this supercedes the rateLimit option)",
-        },
         maxTokens: {
           type: "number",
           default: 4096,
@@ -154,7 +147,6 @@ if (require.main === module) {
         systemPrompt: argv.systemPrompt,
         mutate: argv.mutate,
         ignore: argv.ignore,
-        benchmark: argv.benchmark,
         mutateOnly: argv.mutateOnly,
         mutateOnlyLines: lines,
         maxLinesInPlaceHolder: argv.maxLinesInPlaceHolder,
